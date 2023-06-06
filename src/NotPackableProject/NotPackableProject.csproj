@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\ExampleProject\ExampleProject.csproj" />
+    <ProjectReference Include="..\Byndyusoft.Net.Kafka\Byndyusoft.Net.Kafka.csproj" />
   </ItemGroup>
 
 </Project>

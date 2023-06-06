@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;netstandard2.1</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <AssemblyName>Byndyusoft.Net.Kafka</AssemblyName>
+    <RootNamespace>Byndyusoft.Net.Kafka</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CaseExtensions" Version="1.1.0" />
+    <PackageReference Include="KafkaFlow" Version="2.2.13" />
+    <PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="2.2.13" />
+    <PackageReference Include="KafkaFlow.Retry" Version="1.0.6" />
+    <PackageReference Include="KafkaFlow.Retry.API" Version="1.0.6" />
+    <PackageReference Include="KafkaFlow.Serializer" Version="2.2.13" />
+    <PackageReference Include="KafkaFlow.Serializer.NewtonsoftJson" Version="2.2.13" />
+    <PackageReference Include="KafkaFlow.TypedHandler" Version="2.2.13" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.18" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.18" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8" />
+    <PackageReference Include="OpenTracing" Version="0.12.1" />
+  </ItemGroup>
+
+</Project>
