@@ -7,5 +7,8 @@
         public string Username { get; set; }
         
         public string Prefix { get; set; }
+        
+        //TODO Дать более понятное название
+        public string ServiceName { get; set; }
     }
 }

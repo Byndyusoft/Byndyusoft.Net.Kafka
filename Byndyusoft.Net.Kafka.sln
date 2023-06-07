@@ -5,6 +5,12 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Byndyusoft.Net.Kafka", "src\Byndyusoft.Net.Kafka\Byndyusoft.Net.Kafka.csproj", "{77F03E9B-FD33-4B1D-B365-059B6FCC9A3A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{079DB9FC-E5C1-45CC-8A95-51467AA778CC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{1EAB6FF4-DF20-4AB4-91F6-C64D63519EBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.WebApplication", "Example.WebApplication\Example.WebApplication.csproj", "{06D95D66-2F06-4623-8ACE-FD6171DC8D95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,11 +21,19 @@ Global
 		{77F03E9B-FD33-4B1D-B365-059B6FCC9A3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77F03E9B-FD33-4B1D-B365-059B6FCC9A3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77F03E9B-FD33-4B1D-B365-059B6FCC9A3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06D95D66-2F06-4623-8ACE-FD6171DC8D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06D95D66-2F06-4623-8ACE-FD6171DC8D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06D95D66-2F06-4623-8ACE-FD6171DC8D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06D95D66-2F06-4623-8ACE-FD6171DC8D95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5A3EF0C-96D2-472C-A367-AB34B065DC56}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{77F03E9B-FD33-4B1D-B365-059B6FCC9A3A} = {079DB9FC-E5C1-45CC-8A95-51467AA778CC}
+		{06D95D66-2F06-4623-8ACE-FD6171DC8D95} = {1EAB6FF4-DF20-4AB4-91F6-C64D63519EBC}
 	EndGlobalSection
 EndGlobal

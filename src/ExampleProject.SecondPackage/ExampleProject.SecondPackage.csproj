@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <IsPackable>true</IsPackable>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Byndyusoft.Net.Kafka\Byndyusoft.Net.Kafka.csproj" />
-  </ItemGroup>
-</Project>
