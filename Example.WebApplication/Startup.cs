@@ -14,7 +14,7 @@ namespace Byndyusoft.Example.WebApplication
     
     public class Startup
     {
-        private IConfiguration Configuration { get; set; }
+        private IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
@@ -26,16 +26,9 @@ namespace Byndyusoft.Example.WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddKafka(builder => builder.UseLogHandler<NullLogHandler>())
-                .AddSingleton<ExampleProducer>()
-                .AddSingleton<IKafkaProducer, ExampleProducer>()
-                .AddSingleton<ExampleConsumer>()
-                .AddSingleton<IKafkaConsumer, ExampleConsumer>()
-                .AddSingleton<ExampleMessageHandler>()
-                .AddKafkaBus(Configuration)
+                .AddKafkaBus(Configuration, RegisterServices)
                 .AddControllers();
 
-            services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
 
@@ -55,6 +48,16 @@ namespace Byndyusoft.Example.WebApplication
             
             var kafkaBus = app.ApplicationServices.CreateKafkaBus();
             lifetime.ApplicationStarted.Register(() => kafkaBus.StartAsync(lifetime.ApplicationStopped));
+        }
+
+        private void RegisterServices(IServiceCollection services)
+        {
+            services
+                .AddSingleton<ExampleProducer>()
+                .AddSingleton<IKafkaProducer, ExampleProducer>()
+                .AddSingleton<ExampleConsumer>()
+                .AddSingleton<IKafkaConsumer, ExampleConsumer>()
+                .AddSingleton<ExampleMessageHandler>();
         }
     }
 }

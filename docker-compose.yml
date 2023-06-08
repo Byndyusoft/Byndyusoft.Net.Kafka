@@ -27,13 +27,19 @@ services:
         - zookeeper
       ports:
         - 9092:9092
+        - 9093:9093
       environment:
         KAFKA_BROKER_ID: 1
-        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://127.0.0.1:9092
-        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-        KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+        KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+        ZOOKEEPER_SASL_ENABLED: 'false'
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092, SASL_PLAINTEXT://localhost:9093
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT, SASL_PLAINTEXT:SASL_PLAINTEXT
+        KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
+        KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: SCRAM-SHA-512
+        KAFKA_SASL_ENABLED_MECHANISMS: SCRAM-SHA-512
+        KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/configs/kafka_server_jaas.conf"
+      volumes:
+        - ./configs:/etc/kafka/configs
         
   kafka-ui:
       image: provectuslabs/kafka-ui
