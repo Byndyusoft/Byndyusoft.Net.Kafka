@@ -13,7 +13,7 @@ namespace Byndyusoft.Net.Kafka
         public string Topic { get; }
         
         /// <summary>
-        ///     Message handle method
+        ///     Message handling method
         /// </summary>
         public IMessageHandler MessageHandler { get; }
     }
