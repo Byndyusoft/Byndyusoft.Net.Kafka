@@ -1,14 +1,33 @@
 ﻿namespace Byndyusoft.Net.Kafka
 {
+    /// <summary>
+    ///     TODO
+    /// </summary>
     public class KafkaSettings
     {
-        public string[] Hosts { get; set; }
-        public string Password { get; set; }
-        public string Username { get; set; }
+        /// <summary>
+        ///     TODO
+        /// </summary>
+        public string[] Hosts { get; set; } = default!;
         
-        public string Prefix { get; set; }
+        /// <summary>
+        ///     TODO
+        /// </summary>
+        public string Prefix { get; set; } = default!;
         
-        //TODO Дать более понятное название
-        public string ServiceName { get; set; }
+        /// <summary>
+        ///     TODO
+        /// </summary>
+        public string ClientName { get; set; } = default!;
+        
+        /// <summary>
+        ///     TODO
+        /// </summary>
+        public string GroupName { get; set; } = default!;
+
+        /// <summary>
+        ///     TODO
+        /// </summary>
+        public bool SecurityInformationEnabled { get; set; }
     }
 }

@@ -2,9 +2,9 @@
 {
     internal static class KafkaConsumerBaseExtensions
     {
-        public static string BuildConsumerGroupId(this IKafkaConsumer consumer, string prefix, string serviceName)
+        public static string BuildConsumerGroupId(this IKafkaConsumer consumer, string prefix, string groupName)
         {
-            return $"{prefix}.{serviceName}.{consumer.Topic.Replace(".", "_")}";
+            return $"{prefix}.{groupName}.{consumer.Topic.Replace(".", "_")}";
         }
     }
 }

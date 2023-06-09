@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Byndyusoft.Example.WebApplication.Dtos;
 using Byndyusoft.Example.WebApplication.Producers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,11 +7,11 @@ namespace Byndyusoft.Example.WebApplication.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class MessageController : ControllerBase
+public class MessagesController : ControllerBase
 {   
     private readonly ExampleProducer _exampleProducer;
 
-    public MessageController(ExampleProducer exampleProducer)
+    public MessagesController(ExampleProducer exampleProducer)
     {
         _exampleProducer = exampleProducer;
     }

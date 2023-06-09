@@ -1,4 +1,5 @@
-﻿using Byndyusoft.Net.Kafka;
+﻿using Byndyusoft.Example.WebApplication.Dtos;
+using Byndyusoft.Net.Kafka;
 using KafkaFlow.Producers;
 
 namespace Byndyusoft.Example.WebApplication.Producers
@@ -14,12 +15,5 @@ namespace Byndyusoft.Example.WebApplication.Producers
         {
             return message.Id.ToString();
         }
-    }
-
-    public class ExampleMessageDto
-    {
-        public string Text { get; set; }
-        
-        public long Id { get; set;}
     }
 }

@@ -5,6 +5,9 @@ using KafkaFlow.Producers;
 
 namespace Byndyusoft.Net.Kafka
 {
+    /// <summary>
+    ///     TODO
+    /// </summary>
     public abstract class KafkaProducerBase<T> : IKafkaProducer<T>
     {
         private readonly IProducerAccessor _producers;

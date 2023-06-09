@@ -2,7 +2,7 @@
 
 namespace Byndyusoft.Net.Kafka.Extensions
 {
-    public static class MessageContextExtensions
+    internal static class MessageContextExtensions
     {
         public static bool HasProducerContext(this IMessageContext messageContext)
             => messageContext.ProducerContext != null;

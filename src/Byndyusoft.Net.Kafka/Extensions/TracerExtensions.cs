@@ -7,7 +7,7 @@ using OpenTracing.Propagation;
 
 namespace Byndyusoft.Net.Kafka.Extensions
 {
-    public static class TracerExtensions
+    internal static class TracerExtensions
     {
         public static void InjectMessageContextHeaders(
             this ITracer tracer,

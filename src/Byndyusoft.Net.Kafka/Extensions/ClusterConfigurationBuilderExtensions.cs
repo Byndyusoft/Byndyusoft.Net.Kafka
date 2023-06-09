@@ -13,7 +13,7 @@ using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
 
 namespace Byndyusoft.Net.Kafka.Extensions
 {
-    public static class ClusterConfigurationBuilderExtensions
+    internal static class ClusterConfigurationBuilderExtensions
     {
         private const int MessageMaxSizeBytes = 20 * 1024 * 1024;
         private const int BufferSize = 100;
@@ -24,7 +24,7 @@ namespace Byndyusoft.Net.Kafka.Extensions
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
             IEnumerable<IKafkaProducer> producers, 
             string prefix, 
-            string serviceName
+            string clientName
         )
         {
             foreach (var producer in producers)
@@ -32,7 +32,7 @@ namespace Byndyusoft.Net.Kafka.Extensions
                     producer.Title,
                     producerConfigurationBuilder => producerConfigurationBuilder
                         .DefaultTopic(producer.Topic)
-                        .WithProducerConfig(CreateProducerConfig(producer, prefix, serviceName))
+                        .WithProducerConfig(CreateProducerConfig(producer, prefix, clientName))
                         .AddMiddlewares(
                             middlewares => middlewares
                                 .Add<PublishMessageTracingMiddleware>()
@@ -49,14 +49,14 @@ namespace Byndyusoft.Net.Kafka.Extensions
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
             IEnumerable<IKafkaConsumer> consumers, 
             string prefix, 
-            string serviceName
+            string groupName
         )
         {
             foreach (var consumer in consumers)
                 clusterConfigurationBuilder.AddConsumer(
                     consumerConfigurationBuilder => consumerConfigurationBuilder
                         .Topic(consumer.Topic)
-                        .WithGroupId(consumer.BuildConsumerGroupId(prefix, serviceName))
+                        .WithGroupId(consumer.BuildConsumerGroupId(prefix, groupName))
                         .WithBufferSize(BufferSize)
                         .WithWorkersCount(WorkersCount)
                         .WithAutoOffsetReset(AutoOffsetReset.Earliest)
@@ -83,11 +83,11 @@ namespace Byndyusoft.Net.Kafka.Extensions
             return clusterConfigurationBuilder;
         }
 
-        private static ProducerConfig CreateProducerConfig(IKafkaProducer producer, string prefix, string serviceName)
+        private static ProducerConfig CreateProducerConfig(IKafkaProducer producer, string prefix, string clientName)
         {
             return new ProducerConfig
             {
-                ClientId = producer.BuildClientId(prefix, serviceName),
+                ClientId = producer.BuildProducerClientId(prefix, clientName),
                 Acks = Acks.All,
                 EnableIdempotence = true,
                 MaxInFlight = 1,

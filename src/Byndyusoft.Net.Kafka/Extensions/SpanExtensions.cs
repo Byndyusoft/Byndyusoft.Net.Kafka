@@ -8,7 +8,7 @@ using OpenTracing.Tag;
 
 namespace Byndyusoft.Net.Kafka.Extensions
 {
-    public static class SpanExtensions
+    internal static class SpanExtensions
     {
         public static void SetMessageContext(this ISpan span, IMessageContext messageContext)
         {
@@ -17,6 +17,20 @@ namespace Byndyusoft.Net.Kafka.Extensions
 
             if (messageContext.HasConsumerContext())
                 SetConsumerContext(span, messageContext);
+        }
+
+        public static void SetException(this ISpan span, Exception exception)
+        {
+            span.SetTag(Tags.Error, true);
+
+            span.Log(
+                new Dictionary<string, object>(3)
+                {
+                    { LogFields.Event, Tags.Error.Key },
+                    { LogFields.ErrorKind, exception.GetType().Name },
+                    { LogFields.ErrorObject, exception }
+                }
+            );
         }
 
         private static void SetProducerContext(ISpan span, IMessageContext messageContext)
@@ -51,20 +65,6 @@ namespace Byndyusoft.Net.Kafka.Extensions
                     ["kafka.partition"] = consumerContext.Partition,
                     ["kafka.offset"] = consumerContext.Offset,
                     ["message"] = Encoding.UTF8.GetString((byte[])messageContext.Message.Value)
-                }
-            );
-        }
-
-        public static void SetException(this ISpan span, Exception exception)
-        {
-            span.SetTag(Tags.Error, true);
-
-            span.Log(
-                new Dictionary<string, object>(3)
-                {
-                    { LogFields.Event, Tags.Error.Key },
-                    { LogFields.ErrorKind, exception.GetType().Name },
-                    { LogFields.ErrorObject, exception }
                 }
             );
         }

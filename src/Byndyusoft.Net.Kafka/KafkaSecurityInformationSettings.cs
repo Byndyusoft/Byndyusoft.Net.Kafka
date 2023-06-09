@@ -1,34 +1,30 @@
-﻿using System.Threading.Tasks;
+using KafkaFlow.Configuration;
 
 namespace Byndyusoft.Net.Kafka
 {
     /// <summary>
     ///     TODO
     /// </summary>
-    public interface IKafkaProducer
+    public class KafkaSecurityInformationSettings
     {
         /// <summary>
         ///     TODO
         /// </summary>
-        public string Title { get; }
+        public string Password { get; set; } = default!;
+        
         /// <summary>
         ///     TODO
         /// </summary>
-        public string Topic { get; }
-    }
-
-    /// <summary>
-    ///     TODO
-    /// </summary>
-    public interface IKafkaProducer<in T> : IKafkaProducer
-    {
+        public string Username { get; set; } = default!;
+        
         /// <summary>
         ///     TODO
         /// </summary>
-        public string KeyGenerator(T message);
+        public SaslMechanism SaslMechanism { get; set; }
+        
         /// <summary>
         ///     TODO
         /// </summary>
-        public Task ProduceAsync(T message);
+        public SecurityProtocol SecurityProtocol { get; set; }
     }
 }
