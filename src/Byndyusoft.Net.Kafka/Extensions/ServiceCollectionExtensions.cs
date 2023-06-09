@@ -6,13 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Byndyusoft.Net.Kafka.Extensions
 {
-    /// <summary>
-    ///     TODO
-    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        ///     TODO
+        ///     Register and start Kafka
         /// </summary>
         public static IServiceCollection AddKafkaBus(this IServiceCollection services,
             IConfiguration configuration,

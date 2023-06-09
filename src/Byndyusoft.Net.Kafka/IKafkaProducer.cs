@@ -3,31 +3,32 @@
 namespace Byndyusoft.Net.Kafka
 {
     /// <summary>
-    ///     TODO
+    ///     Produce messages to kafka
     /// </summary>
     public interface IKafkaProducer
     {
         /// <summary>
-        ///     TODO
+        ///     Kafka title name
         /// </summary>
         public string Title { get; }
         /// <summary>
-        ///     TODO
+        ///     Kafka topic name
         /// </summary>
         public string Topic { get; }
     }
 
     /// <summary>
-    ///     TODO
+    ///     Produce T messages to kafka
     /// </summary>
     public interface IKafkaProducer<in T> : IKafkaProducer
     {
         /// <summary>
-        ///     TODO
+        ///     Generate key
         /// </summary>
         public string KeyGenerator(T message);
+        
         /// <summary>
-        ///     TODO
+        ///     Push message to queue
         /// </summary>
         public Task ProduceAsync(T message);
     }

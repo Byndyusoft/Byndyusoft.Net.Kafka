@@ -3,16 +3,17 @@
 namespace Byndyusoft.Net.Kafka
 {
     /// <summary>
-    ///     TODO
+    ///     Consumer that handle messages from kafka
     /// </summary>
     public interface IKafkaConsumer
     {
         /// <summary>
-        ///     TODO
+        ///     Kafka topic name
         /// </summary>
         public string Topic { get; }
+        
         /// <summary>
-        ///     TODO
+        ///     Message handle method
         /// </summary>
         public IMessageHandler MessageHandler { get; }
     }

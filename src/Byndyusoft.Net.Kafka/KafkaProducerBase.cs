@@ -6,7 +6,7 @@ using KafkaFlow.Producers;
 namespace Byndyusoft.Net.Kafka
 {
     /// <summary>
-    ///     TODO
+    ///     Produce T messages to kafka
     /// </summary>
     public abstract class KafkaProducerBase<T> : IKafkaProducer<T>
     {

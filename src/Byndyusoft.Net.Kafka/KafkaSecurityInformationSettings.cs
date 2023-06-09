@@ -3,27 +3,27 @@ using KafkaFlow.Configuration;
 namespace Byndyusoft.Net.Kafka
 {
     /// <summary>
-    ///     TODO
+    ///     Settings to enable Kafka Security Information
     /// </summary>
     public class KafkaSecurityInformationSettings
     {
         /// <summary>
-        ///     TODO
+        ///     Password
         /// </summary>
         public string Password { get; set; } = default!;
         
         /// <summary>
-        ///     TODO
+        ///     Username
         /// </summary>
         public string Username { get; set; } = default!;
         
         /// <summary>
-        ///     TODO
+        ///     SASL Mechanism
         /// </summary>
         public SaslMechanism SaslMechanism { get; set; }
         
         /// <summary>
-        ///     TODO
+        ///     Security Protocol
         /// </summary>
         public SecurityProtocol SecurityProtocol { get; set; }
     }

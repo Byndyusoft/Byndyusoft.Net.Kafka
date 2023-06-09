@@ -1,32 +1,32 @@
 ﻿namespace Byndyusoft.Net.Kafka
 {
     /// <summary>
-    ///     TODO
+    ///     Settings to connection with Kafka
     /// </summary>
     public class KafkaSettings
     {
         /// <summary>
-        ///     TODO
+        ///     Available hosts
         /// </summary>
         public string[] Hosts { get; set; } = default!;
         
         /// <summary>
-        ///     TODO
+        ///     ClientId or GroupId prefix
         /// </summary>
         public string Prefix { get; set; } = default!;
         
         /// <summary>
-        ///     TODO
+        ///     Client name to create unique producer ClientId
         /// </summary>
         public string ClientName { get; set; } = default!;
         
         /// <summary>
-        ///     TODO
+        ///     Group name to create unique consumer GroupId
         /// </summary>
         public string GroupName { get; set; } = default!;
 
         /// <summary>
-        ///     TODO
+        ///     True if you want to use Security Information. False if you don`t want to use Security Information.
         /// </summary>
         public bool SecurityInformationEnabled { get; set; }
     }
