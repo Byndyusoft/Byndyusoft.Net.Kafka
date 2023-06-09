@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Byndyusoft.Example.WebApplication.Dtos;
 using Byndyusoft.Example.WebApplication.Producers;
 using Byndyusoft.ExampleTests.Fixtures;
-using KafkaFlow;
 using Moq;
 using Xunit;
 
@@ -22,7 +21,7 @@ public class ExampleTests
     public async Task ProduceAsync_ProduceMessageToTopic_MessageShouldBeDeliveredToConsumer()
     {
         //Arrange
-        const int id = 100;
+        var id = new Random().NextInt64();
         const string text = "Hello Kafka!";
         var producedMessageDto = new ExampleMessageDto
         {
@@ -34,12 +33,19 @@ public class ExampleTests
         
         //Act
         await producer.ProduceAsync(producedMessageDto);
-        await Task.Delay(2000);
 
         //Assert
-        Mock.Get(_apiFixture.MessageHandler)
-            .Verify(mock =>
-                mock.Handle(It.IsAny<IMessageContext>(),
-                    It.Is<ExampleMessageDto>(dto => dto.Id == id && dto.Text == text)));
+        var exitCondition = false;
+        Mock.Get(_apiFixture.ExampleService)
+            .Setup(service => service.DoSomething(It.IsAny<ExampleMessageDto>()))
+            .Callback(() => exitCondition = true)
+            .Returns(Task.CompletedTask);
+        while (exitCondition == false)
+        {
+            await Task.Delay(100);
+        }
+        
+        Mock.Get(_apiFixture.ExampleService)
+            .Verify(service => service.DoSomething(It.Is<ExampleMessageDto>(dto => dto.Id == id && dto.Text == text)), Times.Once);
     }
 }

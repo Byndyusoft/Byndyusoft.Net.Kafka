@@ -8,18 +8,38 @@ namespace Byndyusoft.Example.WebApplication.MessageHandlers;
 
 public class ExampleMessageHandler : IMessageHandler<ExampleMessageDto>
 {
-    private readonly ILogger<ExampleMessageHandler> _logger;
+    private readonly IExampleService _exampleService;
 
-    public ExampleMessageHandler(ILogger<ExampleMessageHandler> logger)
+    public ExampleMessageHandler(IExampleService exampleService)
     {
-        _logger = logger;
+        _exampleService = exampleService;
     }
 
     public async Task Handle(IMessageContext context, ExampleMessageDto message)
     {
-        _logger.LogInformation("Arrived message with Id: {Id} and text {Text}", message.Id, message.Text);
-            
-        // Полезная работа
-        await Task.Delay(1);
+        await _exampleService.DoSomething(message);
     }
+}
+
+public class ExampleService : IExampleService
+{
+    private readonly ILogger<ExampleService> _logger;
+
+    public ExampleService(ILogger<ExampleService> logger)
+    {
+        _logger = logger;
+    }
+
+    public Task DoSomething(ExampleMessageDto message)
+    {
+        _logger.LogInformation("Arrived message with Id: {Id} and text {Text}", message.Id, message.Text);
+        
+        //Do some work
+        return Task.CompletedTask; 
+    }
+}
+
+public interface IExampleService
+{
+    public Task DoSomething(ExampleMessageDto message);
 }

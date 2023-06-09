@@ -1,7 +1,5 @@
 ﻿using Byndyusoft.Example.WebApplication;
-using Byndyusoft.Example.WebApplication.Dtos;
 using Byndyusoft.Example.WebApplication.MessageHandlers;
-using KafkaFlow.TypedHandler;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -16,7 +14,7 @@ public class ApiFixture : WebApplicationFactory<Program>
 {
     public ITracer Tracer { get; } = new MockTracer();
     
-    public IMessageHandler<ExampleMessageDto> MessageHandler { get; } = Mock.Of<IMessageHandler<ExampleMessageDto>>();
+    public IExampleService ExampleService { get; } = Mock.Of<IExampleService>();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -28,11 +26,11 @@ public class ApiFixture : WebApplicationFactory<Program>
     {
         services
             .AddSingleton(Tracer)
-            .AddSingleton(MessageHandler);
+            .AddSingleton(ExampleService);
     }
 
     public T GetService<T>()
     {
-        return Services.GetService<T>();
+        return Services.GetService<T>()!;
     }
 }

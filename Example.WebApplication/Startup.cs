@@ -1,11 +1,9 @@
 using Byndyusoft.Example.WebApplication.Consumers;
-using Byndyusoft.Example.WebApplication.Dtos;
 using Byndyusoft.Example.WebApplication.MessageHandlers;
 using Byndyusoft.Example.WebApplication.Producers;
 using Byndyusoft.Net.Kafka;
 using Byndyusoft.Net.Kafka.Extensions;
 using KafkaFlow;
-using KafkaFlow.TypedHandler;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,9 +27,10 @@ namespace Byndyusoft.Example.WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddSingleton<IExampleService, ExampleService>()
                 .AddKafkaBus(Configuration, RegisterServices)
                 .AddControllers();
-
+            
             services.AddSwaggerGen();
         }
 
@@ -58,9 +57,9 @@ namespace Byndyusoft.Example.WebApplication
             services
                 .AddSingleton<ExampleProducer>()
                 .AddSingleton<ExampleConsumer>()
+                .AddSingleton<ExampleMessageHandler>()
                 .AddSingleton<IKafkaProducer, ExampleProducer>()
-                .AddSingleton<IKafkaConsumer, ExampleConsumer>()
-                .AddSingleton<IMessageHandler<ExampleMessageDto>, ExampleMessageHandler>();
+                .AddSingleton<IKafkaConsumer, ExampleConsumer>();
         }
     }
 }
