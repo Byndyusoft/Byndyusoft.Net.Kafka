@@ -4,7 +4,7 @@ using KafkaFlow.TypedHandler;
 
 namespace Byndyusoft.Example.WebApplication.Consumers
 {
-    public class ExampleConsumer : IKafkaConsumer
+    public sealed class ExampleConsumer : IKafkaConsumer
     {
         public ExampleConsumer(ExampleMessageHandler messageHandler)
         {

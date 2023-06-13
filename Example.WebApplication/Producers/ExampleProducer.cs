@@ -4,7 +4,7 @@ using KafkaFlow.Producers;
 
 namespace Byndyusoft.Example.WebApplication.Producers
 {
-    public class ExampleProducer : KafkaProducerBase<ExampleMessageDto>
+    public sealed class ExampleProducer : KafkaProducerBase<ExampleMessageDto>
     {
         public ExampleProducer(IProducerAccessor producers) : base(producers, "Title")
         {

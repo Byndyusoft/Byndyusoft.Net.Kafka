@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Byndyusoft.Example.WebApplication.MessageHandlers;
 
-public class ExampleMessageHandler : IMessageHandler<ExampleMessageDto>
+public sealed class ExampleMessageHandler : IMessageHandler<ExampleMessageDto>
 {
     private readonly IExampleService _exampleService;
 
@@ -21,7 +21,7 @@ public class ExampleMessageHandler : IMessageHandler<ExampleMessageDto>
     }
 }
 
-public class ExampleService : IExampleService
+public sealed class ExampleService : IExampleService
 {
     private readonly ILogger<ExampleService> _logger;
 

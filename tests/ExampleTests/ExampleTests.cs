@@ -51,7 +51,7 @@ public class ExampleTests
             await Task.Delay(100);
         }
         
-        // Без этого ожидания, оффсет не будет увеличен (сервис не успевает его выставлять)
+        // Без этого ожидания, оффсет не будет увеличен (сервис не успевает его поднять)
         await Task.Delay(5000);
 
         Mock.Get(_apiFixture.ExampleService)
