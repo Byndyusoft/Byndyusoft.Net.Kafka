@@ -12,7 +12,7 @@ namespace Byndyusoft.Net.Kafka.Extensions
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        ///     Register and start Kafka
+        ///     Register Kafka in DI
         /// </summary>
         public static IServiceCollection AddKafkaBus(this IServiceCollection services,
             IConfiguration configuration,
