@@ -8,15 +8,15 @@ namespace Byndyusoft.Net.Kafka
     public class KafkaSecurityInformationSettings
     {
         /// <summary>
-        ///     Password
-        /// </summary>
-        public string Password { get; set; } = default!;
-        
-        /// <summary>
         ///     Username
         /// </summary>
         public string Username { get; set; } = default!;
-        
+
+        /// <summary>
+        ///     Password
+        /// </summary>
+        public string Password { get; set; } = default!;
+
         /// <summary>
         ///     SASL Mechanism
         /// </summary>

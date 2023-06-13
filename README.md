@@ -9,7 +9,8 @@ dotnet add package Byndyusoft.Net.Kafka
 ```
 
 ## Usage
-Producer:
+
+### Producer:
 ```c#
 public class ExampleProducer : KafkaProducerBase<ExampleMessageDto>
     {
@@ -27,7 +28,7 @@ public class ExampleProducer : KafkaProducerBase<ExampleMessageDto>
     }
 ```
 
-Consumer:
+### Consumer:
 ```c#
 public class ExampleConsumer : IKafkaConsumer
     {
@@ -50,7 +51,26 @@ public sealed class ExampleMessageHandler : IMessageHandler<ExampleMessageDto>
 }
 ```
 
-DI:
+### DI:
 ```c#
 services.AddKafkaBus(Configuration, name => name.Name!.Contains("Example.WebApplication"));
+```
+
+### Configuration
+```json
+{
+  "KafkaSettings" : {
+    "Hosts": [
+      "localhost:9092"
+    ],
+    "SecurityInformationEnabled" : false,
+    "Prefix" : "example"
+  },
+  "KafkaSecurityInformationSettings" : {
+    "Username" : "username",
+    "Password" : "password",
+    "SaslMechanism" : "ScramSha512",
+    "SecurityProtocol" : "SaslPlaintext"
+  }
+}
 ```

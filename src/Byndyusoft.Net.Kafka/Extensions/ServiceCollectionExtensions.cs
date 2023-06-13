@@ -46,10 +46,10 @@ namespace Byndyusoft.Net.Kafka.Extensions
                             {
                                 cluster.WithSecurityInformation(information =>
                                     {
-                                        information.SaslMechanism = kafkaSecurityInformationSettings.SaslMechanism;
-                                        information.SecurityProtocol = kafkaSecurityInformationSettings.SecurityProtocol;
                                         information.SaslUsername = kafkaSecurityInformationSettings.Username;
                                         information.SaslPassword = kafkaSecurityInformationSettings.Password;
+                                        information.SaslMechanism = kafkaSecurityInformationSettings.SaslMechanism;
+                                        information.SecurityProtocol = kafkaSecurityInformationSettings.SecurityProtocol;
                                     });
                             }
                             cluster
