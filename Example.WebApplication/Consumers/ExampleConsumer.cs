@@ -11,6 +11,8 @@ namespace Byndyusoft.Example.WebApplication.Consumers
             MessageHandler = messageHandler;
         }   
         public string Topic => "topic";
+
+        public string GroupName => "example_group";
         public IMessageHandler MessageHandler { get; }
     }
 }

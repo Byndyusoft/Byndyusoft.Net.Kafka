@@ -5,15 +5,18 @@ using Byndyusoft.Example.WebApplication.Producers;
 using Byndyusoft.ExampleTests.Fixtures;
 using Moq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Byndyusoft.ExampleTests;
 
 public class ExampleTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
     private readonly ApiFixture _apiFixture;
 
-    public ExampleTests()
+    public ExampleTests(ITestOutputHelper testOutputHelper)
     {
+        _testOutputHelper = testOutputHelper;
         _apiFixture = new ApiFixture();
     }
 
@@ -21,15 +24,14 @@ public class ExampleTests
     public async Task ProduceAsync_ProduceMessageToTopic_MessageShouldBeDeliveredToConsumer()
     {
         //Arrange
-        var id = new Random().NextInt64();
+        var guid = Guid.NewGuid();
         const string text = "Hello Kafka!";
         var producedMessageDto = new ExampleMessageDto
         {
-            Id = id,
+            Guid = guid,
             Text = text
         };
         var producer = _apiFixture.GetService<ExampleProducer>();
-        _apiFixture.Tracer.BuildSpan("Test").StartActive(true);
         
         //Act
         await producer.ProduceAsync(producedMessageDto);
@@ -38,14 +40,21 @@ public class ExampleTests
         var exitCondition = false;
         Mock.Get(_apiFixture.ExampleService)
             .Setup(service => service.DoSomething(It.IsAny<ExampleMessageDto>()))
-            .Callback(() => exitCondition = true)
+            .Callback((ExampleMessageDto messageDto) =>
+            {
+                _testOutputHelper.WriteLine($"Arrived message with Id: {messageDto.Guid} and text {messageDto.Text}");
+                exitCondition = true;
+            })
             .Returns(Task.CompletedTask);
         while (exitCondition == false)
         {
             await Task.Delay(100);
         }
         
+        // Без этого ожидания, оффсет не будет увеличен (сервис не успевает его выставлять)
+        await Task.Delay(5000);
+
         Mock.Get(_apiFixture.ExampleService)
-            .Verify(service => service.DoSomething(It.Is<ExampleMessageDto>(dto => dto.Id == id && dto.Text == text)), Times.Once);
+            .Verify(service => service.DoSomething(It.Is<ExampleMessageDto>(dto => dto.Guid == guid && dto.Text == text)), Times.Once);
     }
 }

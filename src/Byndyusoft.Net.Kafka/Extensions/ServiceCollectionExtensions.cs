@@ -45,8 +45,8 @@ namespace Byndyusoft.Net.Kafka.Extensions
                             }
                             cluster
                                 .WithBrokers(kafkaSettings.Hosts)
-                                .AddProducers(provider.GetServices<IKafkaProducer>(), kafkaSettings.Prefix, kafkaSettings.ClientName)
-                                .AddConsumers(provider.GetServices<IKafkaConsumer>(), kafkaSettings.Prefix, kafkaSettings.GroupName);
+                                .AddProducers(provider.GetServices<IKafkaProducer>(), kafkaSettings.Prefix)
+                                .AddConsumers(provider.GetServices<IKafkaConsumer>(), kafkaSettings.Prefix);
                         })
             );
 

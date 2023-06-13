@@ -2,9 +2,9 @@
 {
     internal static class KafkaProducerBaseExtensions
     {
-        public static string BuildProducerClientId(this IKafkaProducer producer, string prefix, string clientName)
+        public static string BuildProducerClientId(this IKafkaProducer producer, string prefix)
         {
-            return $"{prefix}.{clientName}.{producer.Topic.Replace(".", "_")}";
+            return $"{prefix}.{producer.ClientName}.{producer.Topic.Replace(".", "_")}";
         }
     }
 }

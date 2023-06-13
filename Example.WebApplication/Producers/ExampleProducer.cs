@@ -11,9 +11,11 @@ namespace Byndyusoft.Example.WebApplication.Producers
         }
 
         public override string Topic  => "topic";
+        public override string ClientName => "example_client";
+
         public override string KeyGenerator(ExampleMessageDto message)
         {
-            return message.Id.ToString();
+            return message.Guid.ToString();
         }
     }
 }

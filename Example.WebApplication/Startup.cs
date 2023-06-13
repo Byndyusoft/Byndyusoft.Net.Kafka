@@ -52,7 +52,7 @@ namespace Byndyusoft.Example.WebApplication
             lifetime.ApplicationStarted.Register(() => kafkaBus.StartAsync(lifetime.ApplicationStopped));
         }
 
-        private void RegisterServices(IServiceCollection services)
+        private static void RegisterServices(IServiceCollection services)
         {
             services
                 .AddSingleton<ExampleProducer>()

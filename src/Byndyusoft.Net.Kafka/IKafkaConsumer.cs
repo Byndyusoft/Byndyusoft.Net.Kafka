@@ -3,7 +3,7 @@
 namespace Byndyusoft.Net.Kafka
 {
     /// <summary>
-    ///     Consumer that handle messages from kafka
+    ///     Kafka messages consumer
     /// </summary>
     public interface IKafkaConsumer
     {
@@ -11,6 +11,11 @@ namespace Byndyusoft.Net.Kafka
         ///     Kafka topic name
         /// </summary>
         public string Topic { get; }
+        
+        /// <summary>
+        ///     Kafka group name
+        /// </summary>
+        public string GroupName { get; }
         
         /// <summary>
         ///     Message handling method

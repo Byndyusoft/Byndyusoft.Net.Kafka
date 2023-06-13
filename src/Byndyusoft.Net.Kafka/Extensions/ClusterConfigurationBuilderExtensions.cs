@@ -23,8 +23,7 @@ namespace Byndyusoft.Net.Kafka.Extensions
         public static IClusterConfigurationBuilder AddProducers(
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
             IEnumerable<IKafkaProducer> producers, 
-            string prefix, 
-            string clientName
+            string prefix
         )
         {
             foreach (var producer in producers)
@@ -32,7 +31,7 @@ namespace Byndyusoft.Net.Kafka.Extensions
                     producer.Title,
                     producerConfigurationBuilder => producerConfigurationBuilder
                         .DefaultTopic(producer.Topic)
-                        .WithProducerConfig(CreateProducerConfig(producer, prefix, clientName))
+                        .WithProducerConfig(CreateProducerConfig(producer, prefix))
                         .AddMiddlewares(
                             middlewares => middlewares
                                 .Add<PublishMessageTracingMiddleware>()
@@ -42,21 +41,21 @@ namespace Byndyusoft.Net.Kafka.Extensions
                                 )
                         )
                 );
+            
             return clusterConfigurationBuilder;
         }
 
         public static IClusterConfigurationBuilder AddConsumers(
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
             IEnumerable<IKafkaConsumer> consumers, 
-            string prefix, 
-            string groupName
+            string prefix
         )
         {
             foreach (var consumer in consumers)
                 clusterConfigurationBuilder.AddConsumer(
                     consumerConfigurationBuilder => consumerConfigurationBuilder
                         .Topic(consumer.Topic)
-                        .WithGroupId(consumer.BuildConsumerGroupId(prefix, groupName))
+                        .WithGroupId(consumer.BuildConsumerGroupId(prefix))
                         .WithBufferSize(BufferSize)
                         .WithWorkersCount(WorkersCount)
                         .WithAutoOffsetReset(AutoOffsetReset.Earliest)
@@ -83,17 +82,17 @@ namespace Byndyusoft.Net.Kafka.Extensions
             return clusterConfigurationBuilder;
         }
 
-        private static ProducerConfig CreateProducerConfig(IKafkaProducer producer, string prefix, string clientName)
+        private static ProducerConfig CreateProducerConfig(IKafkaProducer producer, string prefix)
         {
             return new ProducerConfig
             {
-                ClientId = producer.BuildProducerClientId(prefix, clientName),
+                ClientId = producer.BuildProducerClientId(prefix),
                 Acks = Acks.All,
                 EnableIdempotence = true,
                 MaxInFlight = 1,
                 MessageSendMaxRetries = TryCount,
                 MessageMaxBytes = MessageMaxSizeBytes,
-                RetryBackoffMs = (int) TimeSpan.FromSeconds(1).TotalMilliseconds
+                RetryBackoffMs = (int) TimeSpan.FromSeconds(1).TotalMilliseconds 
             };
         }
 

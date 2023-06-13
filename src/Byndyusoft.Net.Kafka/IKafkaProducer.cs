@@ -15,6 +15,11 @@ namespace Byndyusoft.Net.Kafka
         ///     Kafka topic name
         /// </summary>
         public string Topic { get; }
+        
+        /// <summary>
+        ///     Kafka client name
+        /// </summary>
+        public string ClientName { get; }
     }
 
     /// <summary>

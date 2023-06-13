@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Byndyusoft.Example.WebApplication.Dtos;
 using Byndyusoft.Example.WebApplication.Producers;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +18,14 @@ public class MessagesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task Post(ExampleMessageDto exampleMessageDto)
+    public async Task Post([FromBody] string messageText)
     {
+        var exampleMessageDto = new ExampleMessageDto
+        {
+            Text = messageText,
+            Guid = Guid.NewGuid()
+        };
+        
         await _exampleProducer.ProduceAsync(exampleMessageDto);
     }
 }

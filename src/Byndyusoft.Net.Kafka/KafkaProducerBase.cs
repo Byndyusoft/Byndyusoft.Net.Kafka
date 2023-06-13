@@ -22,6 +22,7 @@ namespace Byndyusoft.Net.Kafka
 
         public string Title { get; }
         public abstract string Topic { get; }
+        public abstract string ClientName { get; }
         public abstract string KeyGenerator(T message);
         public Task ProduceAsync(T message) => _producers[Title].ProduceAsync(KeyGenerator(message), message);
     }
