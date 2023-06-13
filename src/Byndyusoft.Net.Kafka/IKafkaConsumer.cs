@@ -13,7 +13,7 @@ namespace Byndyusoft.Net.Kafka
         public string Topic { get; }
         
         /// <summary>
-        ///     Kafka group name
+        ///     Consumer group name
         /// </summary>
         public string GroupName { get; }
         
