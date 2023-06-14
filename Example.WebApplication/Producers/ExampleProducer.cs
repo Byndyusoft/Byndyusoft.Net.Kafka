@@ -1,5 +1,5 @@
 ﻿using Byndyusoft.Example.WebApplication.Dtos;
-using Byndyusoft.Net.Kafka;
+using Byndyusoft.Net.Kafka.Abstractions;
 using KafkaFlow.Producers;
 
 namespace Byndyusoft.Example.WebApplication.Producers

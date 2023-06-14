@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Byndyusoft.Net.Kafka
+namespace Byndyusoft.Net.Kafka.Abstractions
 {
     /// <summary>
     ///     Produce messages to kafka

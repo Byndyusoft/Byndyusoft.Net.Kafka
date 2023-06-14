@@ -26,7 +26,7 @@ namespace Byndyusoft.Net.Kafka.Middlewares
             span.SetMessageContext(context);
             _tracer.InjectMessageContextHeaders(span, context);
 
-            await next(context).ConfigureAwait(false);
+            await next(context);
 
             span.Finish();
         }

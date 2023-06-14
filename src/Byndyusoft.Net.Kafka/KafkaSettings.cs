@@ -16,7 +16,8 @@
         public string Prefix { get; set; } = default!;
         
         /// <summary>
-        ///     True if you want to use Security Information. False if you don`t want to use Security Information.
+        ///     True if you want to use Security Information.
+        ///     False if you don`t want to use Security Information.
         /// </summary>
         public bool SecurityInformationEnabled { get; set; }
     }

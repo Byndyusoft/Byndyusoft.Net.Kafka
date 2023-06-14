@@ -51,9 +51,20 @@ public sealed class ExampleMessageHandler : IMessageHandler<ExampleMessageDto>
 }
 ```
 
-### DI:
+### DI (Registration in Startup):
 ```c#
-services.AddKafkaBus(Configuration, name => name.Name!.Contains("Example.WebApplication"));
+public void ConfigureServices(IServiceCollection services)
+{
+    ...
+    services.AddKafkaBus(Configuration, name => name.Name!.Contains("Example.WebApplication"));
+}
+```
+```c#
+public void Configure(IApplicationBuilder app, IWebHostEnvironment webHostEnvironment, IHostApplicationLifetime lifetime)
+{
+    ...
+    lifetime.RegisterKafkaBus(app);
+}
 ```
 
 ### Configuration

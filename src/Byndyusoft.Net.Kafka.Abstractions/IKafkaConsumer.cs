@@ -1,6 +1,6 @@
 ﻿using KafkaFlow.TypedHandler;
 
-namespace Byndyusoft.Net.Kafka
+namespace Byndyusoft.Net.Kafka.Abstractions
 {
     /// <summary>
     ///     Kafka messages consumer

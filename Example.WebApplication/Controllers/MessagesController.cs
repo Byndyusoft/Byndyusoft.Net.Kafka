@@ -18,11 +18,11 @@ public class MessagesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task Post([FromBody] string messageText)
+    public async Task Post([FromBody] string text)
     {
         var exampleMessageDto = new ExampleMessageDto
         {
-            Text = messageText,
+            Text = text,
             Guid = Guid.NewGuid()
         };
         

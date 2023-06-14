@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Byndyusoft.Net.Kafka.Abstractions;
 using Byndyusoft.Net.Kafka.Middlewares;
 using Confluent.Kafka;
 using KafkaFlow;

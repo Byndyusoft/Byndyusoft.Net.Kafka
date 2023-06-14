@@ -1,5 +1,5 @@
 ﻿using Byndyusoft.Example.WebApplication.MessageHandlers;
-using Byndyusoft.Net.Kafka;
+using Byndyusoft.Net.Kafka.Abstractions;
 using KafkaFlow.TypedHandler;
 
 namespace Byndyusoft.Example.WebApplication.Consumers

@@ -1,4 +1,6 @@
-﻿namespace Byndyusoft.Net.Kafka.Extensions
+﻿using Byndyusoft.Net.Kafka.Abstractions;
+
+namespace Byndyusoft.Net.Kafka.Extensions
 {
     internal static class KafkaProducerBaseExtensions
     {

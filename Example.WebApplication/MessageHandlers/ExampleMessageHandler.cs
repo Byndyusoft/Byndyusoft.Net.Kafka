@@ -32,7 +32,7 @@ public sealed class ExampleService : IExampleService
 
     public Task DoSomething(ExampleMessageDto message)
     {
-        _logger.LogInformation("Arrived message with Guid: {Guid} and text {Text}", message.Guid, message.Text);
+        _logger.LogInformation("Message with Guid: {Guid} and text {Text} was arrived", message.Guid, message.Text);
         
         //Do some work
         return Task.CompletedTask; 

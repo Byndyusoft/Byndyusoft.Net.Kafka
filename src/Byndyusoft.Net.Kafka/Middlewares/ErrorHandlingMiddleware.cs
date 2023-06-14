@@ -25,7 +25,7 @@ namespace Byndyusoft.Net.Kafka.Middlewares
         {
             try
             {
-                await next(context).ConfigureAwait(false);
+                await next(context);
             }
             catch (Exception ex)
             {

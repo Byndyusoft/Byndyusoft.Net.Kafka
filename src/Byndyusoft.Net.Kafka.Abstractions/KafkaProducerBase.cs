@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CaseExtensions;
 using KafkaFlow.Producers;
 
-namespace Byndyusoft.Net.Kafka
+namespace Byndyusoft.Net.Kafka.Abstractions
 {
     /// <summary>
     ///     Produce T messages to kafka

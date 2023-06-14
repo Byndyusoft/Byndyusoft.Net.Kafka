@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <IsPackable>true</IsPackable>
+        <AssemblyName>Byndyusoft.Net.Kafka.Abstractions</AssemblyName>
+        <RootNamespace>Byndyusoft.Net.Kafka.Abstractions</RootNamespace>
+        <TargetFrameworks>netcoreapp3.1;netstandard2.1</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CaseExtensions" Version="1.1.0" />
+      <PackageReference Include="KafkaFlow" Version="2.2.13" />
+      <PackageReference Include="KafkaFlow.TypedHandler" Version="2.2.13" />
+    </ItemGroup>
+
+</Project>
