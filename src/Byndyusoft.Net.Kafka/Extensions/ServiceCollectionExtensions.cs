@@ -21,9 +21,10 @@ namespace Byndyusoft.Net.Kafka.Extensions
             IConfiguration configuration,
             Func<AssemblyName, bool> assemblyNamePredicate)
         {
+            var callingAssembly = Assembly.GetCallingAssembly();
             return services
                 .AddKafkaOptions(configuration)
-                .AddKafkaServices(assemblyNamePredicate)
+                .AddKafkaServices(callingAssembly, assemblyNamePredicate)
                 .AddKafka(configuration);
         }
 
@@ -36,9 +37,8 @@ namespace Byndyusoft.Net.Kafka.Extensions
                     configuration.GetSection(nameof(KafkaSecurityInformationSettings)));
         }
 
-        private static IServiceCollection AddKafkaServices(this IServiceCollection services, Func<AssemblyName, bool> assemblyNamePredicate)
+        private static IServiceCollection AddKafkaServices(this IServiceCollection services, Assembly callingAssembly, Func<AssemblyName, bool> assemblyNamePredicate)
         {
-            var callingAssembly = Assembly.GetCallingAssembly();
             var assemblies = callingAssembly.LoadReferencedAssemblies(assemblyNamePredicate).ToArray();
 
             return services
