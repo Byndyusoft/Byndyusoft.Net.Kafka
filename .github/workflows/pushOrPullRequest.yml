@@ -27,14 +27,10 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
-      - name: Start Kafka
-        uses: 280780363/kafka-action@v1.0
+      - name: Run Confluent Platform (Confluent Server)
+        uses: ybyzek/cp-all-in-one-action@v0.2
         with:
-          kafka version: "latest"
-          zookeeper version: "latest"
-          kafka port: 9092
-          zookeeper port: 2181
-          auto create topic: "true"
+          service: broker
           
       - name: Test
         run: dotnet test --no-build
