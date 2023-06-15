@@ -1,6 +1,5 @@
 using Byndyusoft.Example.WebApplication.MessageHandlers;
 using Byndyusoft.Net.Kafka.Extensions;
-using KafkaFlow;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

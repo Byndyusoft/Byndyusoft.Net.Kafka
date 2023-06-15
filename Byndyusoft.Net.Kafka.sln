@@ -17,6 +17,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleTests", "tests\Examp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Byndyusoft.Net.Kafka.Abstractions", "src\Byndyusoft.Net.Kafka.Abstractions\Byndyusoft.Net.Kafka.Abstractions.csproj", "{6B508F10-D80F-4E00-A2AC-AFDD31FDDD1E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{ABFA613B-E45A-4A10-BCAD-0476BD6E6B28}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		README.md = README.md
+		docker-compose.yml = docker-compose.yml
+		.gitignore = .gitignore
+		icon.png = icon.png
+		LICENSE = LICENSE
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
