@@ -32,8 +32,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{17771C9D-D2DB-496D-9DC8-B78C94E05F94}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\release.yml = .github\workflows\release.yml
-		.github\workflows\pull-request.yml = .github\workflows\pull-request.yml
-		.github\workflows\push.yml = .github\workflows\push.yml
+		.github\workflows\releasePrerelease.yml = .github\workflows\releasePrerelease.yml
+		.github\workflows\pushOrPullRequest.yml = .github\workflows\pushOrPullRequest.yml
 	EndProjectSection
 EndProject
 Global
