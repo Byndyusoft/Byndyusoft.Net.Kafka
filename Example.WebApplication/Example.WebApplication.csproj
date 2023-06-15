@@ -2,10 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Example.Domain\Example.Domain.csproj" />
       <ProjectReference Include="..\src\Byndyusoft.Net.Kafka\Byndyusoft.Net.Kafka.csproj" />
     </ItemGroup>
 

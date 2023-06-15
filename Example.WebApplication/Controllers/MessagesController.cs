@@ -1,31 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Byndyusoft.Example.WebApplication.Dtos;
-using Byndyusoft.Example.WebApplication.Producers;
+using Byndyusoft.Example.Domain.Dtos;
+using Byndyusoft.Example.Domain.Producers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Byndyusoft.Example.WebApplication.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-public class MessagesController : ControllerBase
-{   
-    private readonly ExampleProducer _exampleProducer;
-
-    public MessagesController(ExampleProducer exampleProducer)
+namespace Byndyusoft.Example.WebApplication.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class MessagesController : ControllerBase
     {
-        _exampleProducer = exampleProducer;
-    }
+        private readonly ExampleProducer _exampleProducer;
 
-    [HttpPost]
-    public async Task Post([FromBody] string text)
-    {
-        var exampleMessageDto = new ExampleMessageDto
+        public MessagesController(ExampleProducer exampleProducer)
         {
-            Text = text,
-            Guid = Guid.NewGuid()
-        };
-        
-        await _exampleProducer.ProduceAsync(exampleMessageDto);
+            _exampleProducer = exampleProducer;
+        }
+
+        [HttpPost]
+        public async Task Post([FromBody] string text)
+        {
+            var exampleMessageDto = new ExampleMessageDto
+            {
+                Text = text,
+                Guid = Guid.NewGuid()
+            };
+
+            await _exampleProducer.ProduceAsync(exampleMessageDto);
+        }
     }
 }

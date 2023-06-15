@@ -1,4 +1,4 @@
-﻿using Byndyusoft.Example.WebApplication.MessageHandlers;
+﻿using Byndyusoft.Example.Domain.MessageHandlers;
 using Byndyusoft.Net.Kafka.Abstractions;
 using KafkaFlow.TypedHandler;
 

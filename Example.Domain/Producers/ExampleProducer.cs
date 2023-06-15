@@ -1,8 +1,8 @@
-﻿using Byndyusoft.Example.WebApplication.Dtos;
+﻿using Byndyusoft.Example.Domain.Dtos;
 using Byndyusoft.Net.Kafka.Abstractions;
 using KafkaFlow.Producers;
 
-namespace Byndyusoft.Example.WebApplication.Producers
+namespace Byndyusoft.Example.Domain.Producers
 {
     public sealed class ExampleProducer : KafkaProducerBase<ExampleMessageDto>
     {

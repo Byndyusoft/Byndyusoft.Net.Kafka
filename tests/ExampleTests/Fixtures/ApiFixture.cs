@@ -1,5 +1,5 @@
-﻿using Byndyusoft.Example.WebApplication;
-using Byndyusoft.Example.WebApplication.MessageHandlers;
+﻿using Byndyusoft.Example.Domain.Services.Interfaces;
+using Byndyusoft.Example.WebApplication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

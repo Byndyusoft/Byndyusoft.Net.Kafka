@@ -1,4 +1,5 @@
-using Byndyusoft.Example.WebApplication.MessageHandlers;
+using Byndyusoft.Example.Domain.Services;
+using Byndyusoft.Example.Domain.Services.Interfaces;
 using Byndyusoft.Net.Kafka.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,6 @@ using Microsoft.Extensions.Hosting;
 
 namespace Byndyusoft.Example.WebApplication
 {
-    
     public class Startup
     {
         private IConfiguration Configuration { get; }
@@ -22,7 +22,7 @@ namespace Byndyusoft.Example.WebApplication
         {
             services
                 .AddSingleton<IExampleService, ExampleService>()
-                .AddKafkaBus(Configuration, name => name.Name!.Contains("Example.WebApplication"))
+                .AddKafkaBus(Configuration, name => name.Name!.Contains("Example.Domain"))
                 .AddControllers();
             
             services.AddSwaggerGen();

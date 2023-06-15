@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using Byndyusoft.Example.WebApplication.Dtos;
-using Byndyusoft.Example.WebApplication.Producers;
+using Byndyusoft.Example.Domain.Dtos;
+using Byndyusoft.Example.Domain.Producers;
 using Byndyusoft.ExampleTests.Fixtures;
 using Moq;
 using Xunit;
