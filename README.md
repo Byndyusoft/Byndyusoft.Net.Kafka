@@ -8,6 +8,25 @@
 dotnet add package Byndyusoft.Net.Kafka
 ```
 
+## Configuration
+```json
+{
+  "KafkaSettings" : {
+    "Hosts": [
+      "localhost:9092"
+    ],
+    "SecurityInformationEnabled" : false,
+    "Prefix" : "example"
+  },
+  "KafkaSecurityInformationSettings" : {
+    "Username" : "username",
+    "Password" : "password",
+    "SaslMechanism" : "ScramSha512",
+    "SecurityProtocol" : "SaslPlaintext"
+  }
+}
+```
+
 ## Usage
 
 ### Producer:
@@ -64,24 +83,5 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment webHostEnviro
 {
     ...
     lifetime.RegisterKafkaBus(app);
-}
-```
-
-### Configuration
-```json
-{
-  "KafkaSettings" : {
-    "Hosts": [
-      "localhost:9092"
-    ],
-    "SecurityInformationEnabled" : false,
-    "Prefix" : "example"
-  },
-  "KafkaSecurityInformationSettings" : {
-    "Username" : "username",
-    "Password" : "password",
-    "SaslMechanism" : "ScramSha512",
-    "SecurityProtocol" : "SaslPlaintext"
-  }
 }
 ```

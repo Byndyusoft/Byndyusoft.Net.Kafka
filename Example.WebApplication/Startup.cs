@@ -41,7 +41,7 @@ namespace Byndyusoft.Example.WebApplication
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 
-            lifetime.RegisterKafkaBus(app);
+            lifetime.UseKafkaBus(app);
         }
     }
 }

@@ -11,15 +11,13 @@
         <VersionPrefix>1.0.0</VersionPrefix>
         <Authors>Byndyusoft</Authors>
 
-        <PackageTags>Byndyusoft;NugetPackageExample</PackageTags>
+        <PackageTags>Byndyusoft;Kafka</PackageTags>
 
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 
-        <RepositoryUrl>https://github.com/Byndyusoft/NetGithubActionsNugetTemplate</RepositoryUrl>
+        <RepositoryUrl>https://github.com/Byndyusoft/Byndyusoft.Net.Kafka</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-
-        <PackageIcon>icon.png</PackageIcon>
 
         <IsPackable>false</IsPackable>
 

@@ -5,10 +5,8 @@ using Byndyusoft.Net.Kafka.Abstractions;
 using Byndyusoft.Net.Kafka.Handlers;
 using KafkaFlow;
 using KafkaFlow.TypedHandler;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace Byndyusoft.Net.Kafka.Extensions
 {
@@ -78,12 +76,6 @@ namespace Byndyusoft.Net.Kafka.Extensions
                                 .AddConsumers(provider.GetServices<IKafkaConsumer>(), kafkaSettings.Prefix);
                         })
             );
-        }
-
-        public static void RegisterKafkaBus(this IHostApplicationLifetime lifetime, IApplicationBuilder app)
-        {
-            var kafkaBus = app.ApplicationServices.CreateKafkaBus();
-            lifetime.ApplicationStarted.Register(() => kafkaBus.StartAsync(lifetime.ApplicationStopped));
         }
 
         private static IServiceCollection AddProducerServices(this IServiceCollection services, Assembly[] assemblies)
