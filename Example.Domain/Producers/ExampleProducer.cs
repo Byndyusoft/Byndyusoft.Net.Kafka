@@ -11,6 +11,7 @@ namespace Byndyusoft.Example.Domain.Producers
         }
 
         public override string Topic  => "topic";
+        
         public override string ClientName => "example_client";
 
         public override string KeyGenerator(ExampleMessageDto message)

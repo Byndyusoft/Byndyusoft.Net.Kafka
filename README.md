@@ -38,6 +38,7 @@ public class ExampleProducer : KafkaProducerBase<ExampleMessageDto>
         }
 
         public override string Topic  => "topic";
+        
         public override string ClientName => "example_client";
 
         public override string KeyGenerator(ExampleMessageDto message)
@@ -58,6 +59,7 @@ public class ExampleConsumer : IKafkaConsumer
         public string Topic => "topic";
 
         public string GroupName => "example_group";
+        
         public IMessageHandler MessageHandler { get; }
     }
     
