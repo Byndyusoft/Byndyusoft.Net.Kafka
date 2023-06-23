@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Byndyusoft.Net.Kafka.Abstractions;
@@ -15,7 +16,8 @@ namespace Byndyusoft.Net.Kafka.Extensions
         /// <summary>
         ///     Register Kafka in DI
         /// </summary>
-        public static IServiceCollection AddKafkaBus(this IServiceCollection services,
+        public static IServiceCollection AddKafkaBus(
+            this IServiceCollection services,
             IConfiguration configuration,
             Func<AssemblyName, bool> assemblyNamePredicate)
         {
@@ -26,7 +28,9 @@ namespace Byndyusoft.Net.Kafka.Extensions
                 .AddKafka(configuration);
         }
 
-        private static IServiceCollection AddKafkaOptions(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddKafkaOptions(
+            this IServiceCollection services, 
+            IConfiguration configuration)
         {
             return services
                 .AddOptions()
@@ -35,7 +39,10 @@ namespace Byndyusoft.Net.Kafka.Extensions
                     configuration.GetSection(nameof(KafkaSecurityInformationSettings)));
         }
 
-        private static IServiceCollection AddKafkaServices(this IServiceCollection services, Assembly callingAssembly, Func<AssemblyName, bool> assemblyNamePredicate)
+        private static IServiceCollection AddKafkaServices(
+            this IServiceCollection services,
+            Assembly callingAssembly, 
+            Func<AssemblyName, bool> assemblyNamePredicate)
         {
             var assemblies = callingAssembly.LoadReferencedAssemblies(assemblyNamePredicate).ToArray();
 
@@ -46,7 +53,9 @@ namespace Byndyusoft.Net.Kafka.Extensions
                 .AddConsumerServices(assemblies);
         }
 
-        private static IServiceCollection AddKafka(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddKafka(
+            this IServiceCollection services, 
+            IConfiguration configuration)
         {
             var provider = services.BuildServiceProvider();
 
@@ -77,8 +86,10 @@ namespace Byndyusoft.Net.Kafka.Extensions
                         })
             );
         }
-
-        private static IServiceCollection AddProducerServices(this IServiceCollection services, Assembly[] assemblies)
+        
+        private static IServiceCollection AddProducerServices(
+            this IServiceCollection services, 
+            Assembly[] assemblies)
         {
             var baseType = typeof(IKafkaProducer);
             var producerTypes = assemblies
@@ -93,7 +104,9 @@ namespace Byndyusoft.Net.Kafka.Extensions
             return services;
         }
 
-        private static IServiceCollection AddMessageHandles(this IServiceCollection services, Assembly[] assemblies)
+        private static IServiceCollection AddMessageHandles(
+            this IServiceCollection services, 
+            Assembly[] assemblies)
         {
             var messageHandlerTypes = assemblies
                 .SelectMany(assembly => assembly.GetTypesAssignableFrom<IMessageHandler>())
@@ -105,7 +118,9 @@ namespace Byndyusoft.Net.Kafka.Extensions
         }
 
         // ReSharper disable once UnusedMethodReturnValue.Local
-        private static IServiceCollection AddConsumerServices(this IServiceCollection services, Assembly[] assemblies)
+        private static IServiceCollection AddConsumerServices(
+            this IServiceCollection services, 
+            Assembly[] assemblies)
         {
             var baseType = typeof(IKafkaConsumer);
             var consumerTypes = assemblies

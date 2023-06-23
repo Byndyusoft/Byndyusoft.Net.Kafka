@@ -20,6 +20,8 @@ namespace Byndyusoft.Net.Kafka.Extensions
         private const int BufferSize = 100;
         private const int WorkersCount = 10;
         private const int TryCount = 3;
+        private const int MaxInFlight = 1;
+        private const int RetryBackoffS = 1;
 
         public static IClusterConfigurationBuilder AddProducers(
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
@@ -28,7 +30,7 @@ namespace Byndyusoft.Net.Kafka.Extensions
         )
         {
             foreach (var producer in producers)
-                clusterConfigurationBuilder.AddProducer(
+                clusterConfigurationBuilder = clusterConfigurationBuilder.AddProducer(
                     producer.Title,
                     producerConfigurationBuilder => producerConfigurationBuilder
                         .DefaultTopic(producer.Topic)
@@ -53,7 +55,7 @@ namespace Byndyusoft.Net.Kafka.Extensions
         )
         {
             foreach (var consumer in consumers)
-                clusterConfigurationBuilder.AddConsumer(
+                clusterConfigurationBuilder = clusterConfigurationBuilder.AddConsumer(
                     consumerConfigurationBuilder => consumerConfigurationBuilder
                         .Topic(consumer.Topic)
                         .WithGroupId(consumer.BuildConsumerGroupId(prefix))
@@ -90,16 +92,16 @@ namespace Byndyusoft.Net.Kafka.Extensions
                 ClientId = producer.BuildProducerClientId(prefix),
                 Acks = Acks.All,
                 EnableIdempotence = true,
-                MaxInFlight = 1,
+                MaxInFlight = MaxInFlight,
                 MessageSendMaxRetries = TryCount,
                 MessageMaxBytes = MessageMaxSizeBytes,
-                RetryBackoffMs = (int) TimeSpan.FromSeconds(1).TotalMilliseconds 
+                RetryBackoffMs = (int) TimeSpan.FromSeconds(RetryBackoffS).TotalMilliseconds 
             };
         }
 
         private static TimeSpan CalculateTimeBetweenTries(int retryCount)
         {
-            return TimeSpan.FromMilliseconds(Math.Pow(2, retryCount) * 1000);
+            return TimeSpan.FromSeconds(Math.Pow(2, retryCount));
         }
     }
 }
