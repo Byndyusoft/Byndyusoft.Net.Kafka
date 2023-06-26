@@ -47,6 +47,7 @@ public class ExampleProducer : KafkaProducerBase<ExampleMessageDto>
         }
     }
 ```
+**Note**: Title will be converted to snake case.
 
 ### Consumer:
 ```c#
