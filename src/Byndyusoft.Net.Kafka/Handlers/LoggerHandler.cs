@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Byndyusoft.Net.Kafka.Handlers
 {
-    //TODO: проверить, нужно ли
     internal class LoggerHandler : ILogHandler
     {
         private readonly ILogger<LoggerHandler> _logger;
