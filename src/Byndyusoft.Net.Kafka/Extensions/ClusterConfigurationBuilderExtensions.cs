@@ -16,6 +16,7 @@ namespace Byndyusoft.Net.Kafka.Extensions
 {
     internal static class ClusterConfigurationBuilderExtensions
     {
+        //TODO по необходимости вынести это в настройки https://github.com/Byndyusoft/Byndyusoft.Net.Kafka/issues/5
         private const int MessageMaxSizeBytes = 20 * 1024 * 1024;
         private const int BufferSize = 100;
         private const int WorkersCount = 10;
