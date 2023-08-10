@@ -18,10 +18,10 @@ project.portfolio.precalculation_result
 
 Если прямо сейчас у вас нет времени погружаться в настройки topics:
 
-| Настройка           | Описание           | Значение            				| 
-| ------------------- | ------------------ | -----------------------------------| 
-| partitions          | Количество партиций| 9                   				|     
-| replication-factor  | Количество реплик каждой из партиций| 3                 |        
+| Настройка           | Описание           | Значение       | 
+| ------------------- | ------------------ | ---------------| 
+| partitions          | Количество партиций| 9 |     
+| replication-factor  | Количество реплик каждой из партиций| 3 |        
 | min.insync.replicas | Число реплик, которые должны быть синхронизированы, чтобы можно было продолжить запись| 2 |          
 | retention.ms        | Определяет максимальный возраст сообщения, после превышения которого следует его удалить | Время разбора инцидента поддержкой |
 
@@ -38,11 +38,11 @@ dotnet add package Byndyusoft.Net.Kafka
       "some-host:9092"
     ],
     "Prefix" : "some-prefix",
-	"KafkaSecurityInformationSettings" : {
-		"Username" : "username",
-		"Password" : "password",
-		"SaslMechanism" : "ScramSha512",
-		"SecurityProtocol" : "SaslPlaintext"
+    "KafkaSecurityInformationSettings" : {
+	"Username" : "username",
+	"Password" : "password",
+	"SaslMechanism" : "ScramSha512",
+	"SecurityProtocol" : "SaslPlaintext"
 	}
 }
 ```
@@ -76,11 +76,11 @@ public void Configure(
 2. Идемпотентность: cемантика exactly-once с сохранением порядка доставки для каждого раздела.
 3. Если сообщение не удалось отправить, продюсер будет повторять попытку до 3 раз с задержкой в 1 секунду между каждой попыткой
 
-| Настройка           | Описание           | Значение            				| 
+| Настройка           | Описание           | Значение            		| 
 | ------------------- | ------------------ | -----------------------------------| 
 | enable.idempotence  | Гарантирует запись только одного сообщения в конкретную партицию одного топика | true |     
 | max.in.flight.requests.per.connection | Общее число неподтверждённых брокером запросов для одного клиента | 1 |        
-| acks                | После скольких acknowledge лидеру кластера необходимо считать сообщение успешно записанным               | all (значение из min.insync.replicas) | 
+| acks                | После скольких acknowledge лидеру кластера необходимо считать сообщение успешно записанным | all (значение из min.insync.replicas) | 
 
 Конвенция наименования: 
 "{KafkaSettings.Prefix}{Producer}{Producer.Topic}".ToSnakeCase()
