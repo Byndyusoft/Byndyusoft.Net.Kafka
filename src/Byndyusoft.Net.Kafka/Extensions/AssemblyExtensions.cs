@@ -7,23 +7,23 @@
     
     internal static class AssemblyExtensions
     {
-        public static List<Type> GetTypesAssignableFrom<T>(this Assembly assembly)
+        public static IEnumerable<Type> GetTypesAssignableFrom<T>(this Assembly assembly)
         {
             var compareType = typeof(T);
             return assembly.DefinedTypes
                 .Where(type => 
                     compareType.IsAssignableFrom(type) 
                     && compareType != type
-                    && type.IsClass
-                    && type.IsAbstract == false
+                    && type is { IsClass: true, IsAbstract: false }
                 )
                 .Cast<Type>()
                 .ToList();
         }
 
-        public static IEnumerable<Assembly> LoadReferencedAssemblies(this Assembly assembly, 
-            Func<AssemblyName, bool> assemblyNamePredicate)
+        public static IEnumerable<Assembly> LoadReferencedAssemblies(this Assembly assembly)
         {
+            var prefix = assembly.GetName().Name!.Split('.').First();
+
             var assemblyNames = new HashSet<string>();
             var assembliesStack = new Stack<Assembly>();
 
@@ -36,16 +36,19 @@
                 yield return currentAssembly;
                 
                 var referencedAssemblies = currentAssembly.GetReferencedAssemblies()
-                    .Where(assemblyName => string.IsNullOrEmpty(assemblyName.Name) == false 
-                                           && assemblyNames.Contains(assemblyName.FullName) == false
-                                           && assemblyNamePredicate(assemblyName))
+                    .Where(
+                        assemblyName =>
+                            string.IsNullOrEmpty(assemblyName.Name) == false
+                            && assemblyName.Name.StartsWith(prefix)
+                    )
                     .ToArray();
 
                 foreach (var reference in referencedAssemblies)
-                {
-                    assembliesStack.Push(Assembly.Load(reference)); 
-                    assemblyNames.Add(reference.FullName);
-                }
+                    if (assemblyNames.Contains(reference.FullName) == false)
+                    {
+                        assembliesStack.Push(Assembly.Load(reference));
+                        assemblyNames.Add(reference.FullName);
+                    }
                     
             } while (assembliesStack.Count > 0);
         }

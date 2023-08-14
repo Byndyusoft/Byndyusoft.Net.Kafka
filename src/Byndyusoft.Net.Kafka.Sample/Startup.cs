@@ -1,14 +1,12 @@
-using Byndyusoft.Example.Domain.Services;
-using Byndyusoft.Example.Domain.Services.Interfaces;
-using Byndyusoft.Net.Kafka.Extensions;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-namespace Byndyusoft.Example.WebApplication
+namespace Byndyusoft.Net.Kafka.Sample
 {
+    using Extensions;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+
     public class Startup
     {
         private IConfiguration Configuration { get; }
@@ -21,8 +19,7 @@ namespace Byndyusoft.Example.WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddSingleton<IExampleService, ExampleService>()
-                .AddKafkaBus(Configuration, name => name.Name!.Contains("Example.Domain"))
+                .AddKafkaBus(Configuration)
                 .AddControllers();
             
             services.AddSwaggerGen();
@@ -41,7 +38,7 @@ namespace Byndyusoft.Example.WebApplication
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 
-            lifetime.UseKafkaBus(app);
+            app.UseKafkaBus(lifetime);
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿using Byndyusoft.Net.Kafka.Abstractions;
-
-namespace Byndyusoft.Net.Kafka.Extensions
+﻿namespace Byndyusoft.Net.Kafka.Extensions
 {
+    using CaseExtensions;
+
     internal static class KafkaConsumerBaseExtensions
     {
-        public static string BuildConsumerGroupId(this IKafkaConsumer consumer, string prefix)
-        {
-            return $"{prefix}.{consumer.GroupName}.{consumer.Topic.Replace(".", "_")}";
-        }
+        public static string BuildConsumersGroupId(this IKafkaConsumer consumer, string prefix)
+            => $"{prefix.ToSnakeCase()}.{consumer.Topic.Replace(".", "_")}";
     }
 }

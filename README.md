@@ -5,7 +5,7 @@
 
 ## Quickstart
 
-1. Создаем topics с которыми будет работать приложение, используя конвенцию именования:
+1. Создаем topic с которыми будет работать приложение, используя конвенцию именования:
 "{проект}.{сущность}.{событие с ней произошедшее}"
 
 Примеры:
@@ -40,11 +40,11 @@ dotnet add package Byndyusoft.Net.Kafka
       "some-host:9092"
     ],
     "Prefix" : "some-prefix",
-    "KafkaSecurityInformationSettings" : {
-	"Username" : "username",
-	"Password" : "password",
-	"SaslMechanism" : "ScramSha512",
-	"SecurityProtocol" : "SaslPlaintext"
+    "SecurityInformation" : {
+	    "Username" : "username",
+	    "Password" : "password",
+	    "SaslMechanism" : "ScramSha512",
+	    "SecurityProtocol" : "SaslPlaintext"
 	}
 }
 ```
@@ -66,9 +66,10 @@ public void ConfigureServices(IServiceCollection services)
 public void Configure(
     IApplicationBuilder app,
     IWebHostEnvironment env,
-    IHostApplicationLifetime lifetime)
+    IHostApplicationLifetime lifetime
+)
 {
-	app.UseKafkaBus(app);
+	app.UseKafkaBus(lifetime);
 }
 ```
 
@@ -91,17 +92,17 @@ public void Configure(
 project.something_happened_events_producer.project.entity.some_event
 
 ```c#
-public class SomethingHappenedEventsProducer : KafkaProducerBase<SomeEvent>
+public class EntityCreationEventsProducer : KafkaProducerBase<EntityCreation>
 {
-    public SomethingHappenedEventsProducer(IProducerAccessor producers) 
-		: base(producers, nameof(SomethingHappenedEventsProducer))
+    public EntityCreationEventsProducer(IProducerAccessor producers) 
+        : base(producers, nameof(EntityCreationEventsProducer))
     {
     }
 
-    public override string Topic  => "project.entity.some_event";
+    public override string Topic => "project.entity.creation";
     
-    public override string KeyGenerator(ExampleMessageDto message)
-		=> SomeEvent.Id.ToString();
+    public override string KeyGenerator(EntityCreation entityCreation)
+        => entityCreation.Id.ToString();
 }
 ```
 
@@ -117,21 +118,30 @@ public class SomethingHappenedEventsProducer : KafkaProducerBase<SomeEvent>
 project.something_happened_events_producer.project.entity.some_event
 
 ```c#
-public class SomethingHappenedEventsConsumer : IKafkaConsumer
+public class EntityCreationEventsConsumer : IKafkaConsumer
 {
-	public SomethingHappenedEventsConsumer(SomethingHappenedMessageHandler messageHandler)
-        {
-            MessageHandler = messageHandler;
-        }   
-	
-        public string Topic => "project.entity.some_event";
-        
-        public IMessageHandler MessageHandler { get; }
+    public EntityCreationEventsConsumer(EntityCreationMessageHandler messageHandler)
+    {
+        MessageHandler = messageHandler;
+    }
+
+    public string Topic => "project.entity.creation";
+
+    public IMessageHandler MessageHandler { get; }
 }
 
-public sealed class SomethingHappenedMessageHandler : IMessageHandler<SomeEvent>
+public class EntityCreationMessageHandler : IMessageHandler<EntityCreation>
 {
-        public Task Handle(IMessageContext context, SomeEvent someEvent)
-        	=> Task.FromResult(someEvent)
+    public Task Handle(IMessageContext context, EntityCreation someEvent)
+    {
+        Console.WriteLine(
+            "Partition: {0} | Offset: {1} | Message: {2}",
+            context.ConsumerContext.Partition,
+            context.ConsumerContext.Offset,
+            someEvent.Text
+        );
+
+        return Task.FromResult(someEvent);
+    }
 }
 ```

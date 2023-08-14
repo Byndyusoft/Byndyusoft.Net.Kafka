@@ -1,36 +1,32 @@
-﻿using Byndyusoft.Example.Domain.Services.Interfaces;
-using Byndyusoft.Example.WebApplication;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using OpenTracing;
-using OpenTracing.Mock;
-
-namespace Byndyusoft.ExampleTests.Fixtures;
-
-public class ApiFixture : WebApplicationFactory<Program>
+﻿namespace Byndyusoft.Net.ExampleTests.Fixtures
 {
-    public ITracer Tracer { get; } = new MockTracer();
-    
-    public IExampleService ExampleService { get; } = Mock.Of<IExampleService>();
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc.Testing;
+    using Microsoft.AspNetCore.TestHost;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.VisualStudio.TestPlatform.TestHost;
+    using Moq;
+    using OpenTracing;
+    using OpenTracing.Mock;
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    public class ApiFixture : WebApplicationFactory<Program>
     {
-        base.ConfigureWebHost(builder);
-        builder.ConfigureTestServices(ConfigureTestServices);
-    }
+        public ITracer Tracer { get; } = new MockTracer();
+        
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
+        {
+            base.ConfigureWebHost(builder);
+            builder.ConfigureTestServices(ConfigureTestServices);
+        }
 
-    private void ConfigureTestServices(IServiceCollection services)
-    {
-        services
-            .AddSingleton(Tracer)
-            .AddSingleton(ExampleService);
-    }
+        private void ConfigureTestServices(IServiceCollection services)
+        {
+            services.AddSingleton(Tracer);
+        }
 
-    public T GetService<T>()
-    {
-        return Services.GetService<T>()!;
+        public T GetService<T>()
+        {
+            return Services.GetService<T>()!;
+        }
     }
 }

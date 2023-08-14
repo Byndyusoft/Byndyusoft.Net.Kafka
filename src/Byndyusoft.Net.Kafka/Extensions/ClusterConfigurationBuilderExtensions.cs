@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Byndyusoft.Net.Kafka.Abstractions;
 using Byndyusoft.Net.Kafka.Middlewares;
 using Confluent.Kafka;
 using KafkaFlow;
@@ -16,13 +15,7 @@ namespace Byndyusoft.Net.Kafka.Extensions
 {
     internal static class ClusterConfigurationBuilderExtensions
     {
-        //TODO по необходимости вынести это в настройки https://github.com/Byndyusoft/Byndyusoft.Net.Kafka/issues/5
         private const int MessageMaxSizeBytes = 20 * 1024 * 1024;
-        private const int BufferSize = 100;
-        private const int WorkersCount = 10;
-        private const int TryCount = 3;
-        private const int MaxInFlight = 1;
-        private const int RetryBackoffS = 1;
 
         public static IClusterConfigurationBuilder AddProducers(
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
@@ -59,11 +52,10 @@ namespace Byndyusoft.Net.Kafka.Extensions
                 clusterConfigurationBuilder = clusterConfigurationBuilder.AddConsumer(
                     consumerConfigurationBuilder => consumerConfigurationBuilder
                         .Topic(consumer.Topic)
-                        .WithGroupId(consumer.BuildConsumerGroupId(prefix))
-                        .WithBufferSize(BufferSize)
-                        .WithWorkersCount(WorkersCount)
+                        .WithGroupId(consumer.BuildConsumersGroupId(prefix))
+                        .WithBufferSize(100)
+                        .WithWorkersCount(10)
                         .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-                        .WithConsumerConfig(new ConsumerConfig {MaxPartitionFetchBytes = MessageMaxSizeBytes})
                         .AddMiddlewares(
                             middlewares =>
                                 middlewares
@@ -77,8 +69,8 @@ namespace Byndyusoft.Net.Kafka.Extensions
                                     .AddTypedHandlers(h => h.AddHandlers(new[] {consumer.MessageHandler.GetType()}))
                                     .RetrySimple(
                                         config => config
-                                            .TryTimes(TryCount)
-                                            .WithTimeBetweenTriesPlan(CalculateTimeBetweenTries)
+                                            .TryTimes(3)
+                                            .WithTimeBetweenTriesPlan(retryNumber => TimeSpan.FromSeconds(Math.Pow(2, retryNumber)))
                                     )
                         )
                 );
@@ -93,16 +85,11 @@ namespace Byndyusoft.Net.Kafka.Extensions
                 ClientId = producer.BuildProducerClientId(prefix),
                 Acks = Acks.All,
                 EnableIdempotence = true,
-                MaxInFlight = MaxInFlight,
-                MessageSendMaxRetries = TryCount,
+                MaxInFlight = 1,
+                MessageSendMaxRetries = 3,
                 MessageMaxBytes = MessageMaxSizeBytes,
-                RetryBackoffMs = (int) TimeSpan.FromSeconds(RetryBackoffS).TotalMilliseconds 
+                RetryBackoffMs = (int) TimeSpan.FromSeconds(1).TotalMilliseconds 
             };
-        }
-
-        private static TimeSpan CalculateTimeBetweenTries(int retryCount)
-        {
-            return TimeSpan.FromSeconds(Math.Pow(2, retryCount));
         }
     }
 }

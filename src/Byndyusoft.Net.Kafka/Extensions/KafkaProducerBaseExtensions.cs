@@ -1,12 +1,10 @@
-﻿using Byndyusoft.Net.Kafka.Abstractions;
+﻿using CaseExtensions;
 
 namespace Byndyusoft.Net.Kafka.Extensions
 {
     internal static class KafkaProducerBaseExtensions
     {
         public static string BuildProducerClientId(this IKafkaProducer producer, string prefix)
-        {
-            return $"{prefix}.{producer.ClientName}.{producer.Topic.Replace(".", "_")}";
-        }
+            => $"{prefix.ToSnakeCase()}.{producer.Topic.Replace(".", "_")}";
     }
 }

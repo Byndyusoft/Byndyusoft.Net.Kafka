@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using CaseExtensions;
-using KafkaFlow.Producers;
-
-namespace Byndyusoft.Net.Kafka.Abstractions
+﻿namespace Byndyusoft.Net.Kafka
 {
+    using System;
+    using System.Threading.Tasks;
+    using CaseExtensions;
+    using KafkaFlow.Producers;
+
     /// <summary>
     ///     Produce T messages to kafka
     /// </summary>
@@ -22,8 +22,11 @@ namespace Byndyusoft.Net.Kafka.Abstractions
 
         public string Title { get; }
         public abstract string Topic { get; }
-        public abstract string ClientName { get; }
         public abstract string KeyGenerator(T message);
-        public Task ProduceAsync(T message) => _producers[Title].ProduceAsync(KeyGenerator(message), message);
+
+        public Task ProduceAsync(T message)
+        {
+            return _producers[Title].ProduceAsync(KeyGenerator(message), message);
+        }
     }
 }

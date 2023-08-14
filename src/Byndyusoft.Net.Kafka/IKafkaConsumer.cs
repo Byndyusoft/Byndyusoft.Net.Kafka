@@ -1,7 +1,7 @@
-﻿using KafkaFlow.TypedHandler;
-
-namespace Byndyusoft.Net.Kafka.Abstractions
+﻿namespace Byndyusoft.Net.Kafka
 {
+    using KafkaFlow.TypedHandler;
+
     /// <summary>
     ///     Kafka messages consumer
     /// </summary>
@@ -11,12 +11,7 @@ namespace Byndyusoft.Net.Kafka.Abstractions
         ///     Kafka topic name
         /// </summary>
         public string Topic { get; }
-        
-        /// <summary>
-        ///     Consumer group name
-        /// </summary>
-        public string GroupName { get; }
-        
+
         /// <summary>
         ///     Message handling method
         /// </summary>
