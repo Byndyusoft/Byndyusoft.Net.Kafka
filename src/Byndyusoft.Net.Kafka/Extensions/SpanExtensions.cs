@@ -8,7 +8,7 @@ using OpenTracing.Tag;
 
 namespace Byndyusoft.Net.Kafka.Extensions
 {
-    internal static class SpanExtensions
+    public static class SpanExtensions
     {
         public static void SetMessageContext(this ISpan span, IMessageContext messageContext)
         {

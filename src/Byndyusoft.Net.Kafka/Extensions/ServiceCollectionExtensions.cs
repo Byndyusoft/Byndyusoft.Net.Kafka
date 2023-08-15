@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
         var assemblies = callingAssembly.LoadReferencedAssemblies().ToArray();
         return services
             .AddKafkaOptions(configuration)
-            .AddKafka(configuration)
+            .AddKafka(configuration, callingAssembly)
             .AddProducerServices(assemblies)
             .AddMessageHandles(assemblies)
             .AddConsumerServices(assemblies);
@@ -42,13 +42,14 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddKafka(
         this IServiceCollection services,
-        IConfiguration configuration
+        IConfiguration configuration,
+        Assembly callingAssembly
     )
     {
         var provider = services.BuildServiceProvider();
 
         var kafkaSettings = configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>();
-        var callingAssemblyName = Assembly.GetCallingAssembly().GetName().Name!;
+        var callingAssemblyName = callingAssembly.GetName().Name!;
         return services.AddKafka(
             kafka => kafka
                 .UseLogHandler<LoggerHandler>()
@@ -102,7 +103,6 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    // ReSharper disable once UnusedMethodReturnValue.Local
     private static IServiceCollection AddConsumerServices(
         this IServiceCollection services,
         IEnumerable<Assembly> assemblies

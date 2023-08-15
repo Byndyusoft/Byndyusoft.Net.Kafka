@@ -7,12 +7,13 @@ using OpenTracing.Propagation;
 
 namespace Byndyusoft.Net.Kafka.Extensions
 {
-    internal static class TracerExtensions
+    public static class TracerExtensions
     {
         public static void InjectMessageContextHeaders(
             this ITracer tracer,
             ISpan span,
-            IMessageContext messageContext)
+            IMessageContext messageContext
+        )
         {
             var carriers = new Dictionary<string, string>();
             tracer.Inject(span.Context, BuiltinFormats.HttpHeaders, new TextMapInjectAdapter(carriers));
@@ -22,7 +23,8 @@ namespace Byndyusoft.Net.Kafka.Extensions
 
         public static ISpanContext CreateSpanContextFromMessageContext(
             this ITracer tracer,
-            IMessageContext messageContext)
+            IMessageContext messageContext
+        )
         {
             var contextHeaders = messageContext.Headers.ToDictionary(x => x.Key, x => Encoding.UTF8.GetString(x.Value));
             return tracer.Extract(BuiltinFormats.HttpHeaders, new TextMapExtractAdapter(contextHeaders));

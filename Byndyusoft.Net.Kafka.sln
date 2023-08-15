@@ -28,6 +28,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Byndyusoft.Net.Kafka.Sample
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Byndyusoft.Net.Kafka.Sample.Contracts", "src\Byndyusoft.Net.Kafka.Sample.Contracts\Byndyusoft.Net.Kafka.Sample.Contracts.csproj", "{A9A717E4-0277-4E21-8F12-9BC57ACA8973}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Byndyusoft.Net.Kafka.Tests", "src\Byndyusoft.Net.Kafka.Tests\Byndyusoft.Net.Kafka.Tests.csproj", "{B78EA760-26CD-4D0C-8324-31ECF0DA0013}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{A9A717E4-0277-4E21-8F12-9BC57ACA8973}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9A717E4-0277-4E21-8F12-9BC57ACA8973}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9A717E4-0277-4E21-8F12-9BC57ACA8973}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B78EA760-26CD-4D0C-8324-31ECF0DA0013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B78EA760-26CD-4D0C-8324-31ECF0DA0013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B78EA760-26CD-4D0C-8324-31ECF0DA0013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B78EA760-26CD-4D0C-8324-31ECF0DA0013}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Include="Byndyusoft.Net.Kafka.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Byndyusoft.Tracing" Version="0.2.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>

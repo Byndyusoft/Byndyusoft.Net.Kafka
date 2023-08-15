@@ -1,10 +1,16 @@
-﻿namespace Byndyusoft.Net.Kafka.Extensions
-{
-    using CaseExtensions;
+﻿namespace Byndyusoft.Net.Kafka.Extensions;
 
-    internal static class KafkaConsumerBaseExtensions
+using System.Linq;
+using CaseExtensions;
+
+public static class KafkaConsumerBaseExtensions
+{
+    public static string BuildConsumersGroupId(this IKafkaConsumer consumer, string solutionName)
     {
-        public static string BuildConsumersGroupId(this IKafkaConsumer consumer, string prefix)
-            => $"{prefix.ToSnakeCase()}.{consumer.Topic.Replace(".", "_")}";
+        var solutionNameParts = solutionName.Split('.').ToArray();
+        var project = solutionNameParts[0];
+        var service = string.Join("_", solutionNameParts.Skip(1).Select(x => x.ToSnakeCase()));
+
+        return $"{project}.{service}.{consumer.Topic.Replace(".", "_")}".ToLower();
     }
 }
