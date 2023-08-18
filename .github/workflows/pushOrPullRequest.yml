@@ -26,11 +26,6 @@ jobs:
 
       - name: Build
         run: dotnet build --no-restore
-
-      - name: Run Confluent Platform (Confluent Server)
-        uses: ybyzek/cp-all-in-one-action@v0.2
-        with:
-          service: broker
           
       - name: Test
         run: dotnet test --no-build
