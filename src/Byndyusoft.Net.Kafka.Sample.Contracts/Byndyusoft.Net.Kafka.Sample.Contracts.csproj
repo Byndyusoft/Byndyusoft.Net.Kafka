@@ -1,9 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
 		<RootNamespace>Byndyusoft.Net.Kafka.Sample.Contracts</RootNamespace>
 		<AssemblyName>Byndyusoft.Net.Kafka.Sample.Contracts</AssemblyName>
 	</PropertyGroup>

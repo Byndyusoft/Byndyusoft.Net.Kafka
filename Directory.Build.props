@@ -4,9 +4,6 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
 
-        <AssemblyName>Byndyusoft.Net.$(MSBuildProjectName)</AssemblyName>
-        <RootNamespace>Byndyusoft.Net.$(MSBuildProjectName)</RootNamespace>
-
         <VersionPrefix>1.0.0</VersionPrefix>
         <Authors>Byndyusoft</Authors>
 

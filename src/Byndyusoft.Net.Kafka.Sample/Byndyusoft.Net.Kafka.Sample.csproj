@@ -1,19 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-	    <RootNamespace>Byndyusoft.Net.Kafka.Sample</RootNamespace>
-	    <AssemblyName>Byndyusoft.Net.Kafka.Sample</AssemblyName>
-    </PropertyGroup>
+	<PropertyGroup>
+		<RootNamespace>Byndyusoft.Net.Kafka.Sample</RootNamespace>
+		<AssemblyName>Byndyusoft.Net.Kafka.Sample</AssemblyName>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Byndyusoft.Tracing" Version="0.2.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Byndyusoft.Tracing" Version="0.2.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Byndyusoft.Net.Kafka.Sample.Contracts\Byndyusoft.Net.Kafka.Sample.Contracts.csproj" />
-      <ProjectReference Include="..\Byndyusoft.Net.Kafka\Byndyusoft.Net.Kafka.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Byndyusoft.Net.Kafka.Sample.Contracts\Byndyusoft.Net.Kafka.Sample.Contracts.csproj" />
+		<ProjectReference Include="..\Byndyusoft.Net.Kafka\Byndyusoft.Net.Kafka.csproj" />
+	</ItemGroup>
 
 </Project>
