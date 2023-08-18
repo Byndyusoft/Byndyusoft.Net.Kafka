@@ -1,6 +1,7 @@
-﻿namespace Byndyusoft.Net.Kafka.Sample.Producers
+﻿namespace Api.Producers
 {
-    using Contracts;
+    using Byndyusoft.Net.Kafka;
+    using Byndyusoft.Net.Kafka.Api.Contracts;
     using KafkaFlow.Producers;
 
     public class EntityCreationEventsProducer : KafkaProducerBase<EntityCreation>

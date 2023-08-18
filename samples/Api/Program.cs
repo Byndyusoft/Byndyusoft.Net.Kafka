@@ -1,8 +1,8 @@
-namespace Byndyusoft.Net.Kafka.Sample;
+namespace Api;
 
+using Byndyusoft.Tracing;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Tracing;
 
 public class Program
 {

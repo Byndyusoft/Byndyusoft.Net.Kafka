@@ -1,8 +1,7 @@
-﻿namespace Byndyusoft.Net.Kafka.Sample.Consumers.MessageHandlers;
+﻿namespace Byndyusoft.Net.Kafka.Tests.Common.TestDatasets.Consumers.MessageHandlers;
 
 using System;
 using System.Threading.Tasks;
-using Contracts;
 using KafkaFlow;
 using KafkaFlow.TypedHandler;
 

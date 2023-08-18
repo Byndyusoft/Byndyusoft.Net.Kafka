@@ -1,4 +1,4 @@
-﻿namespace Byndyusoft.Net.Kafka.Sample.Contracts
+﻿namespace Byndyusoft.Net.Kafka.Tests.Common.TestDatasets
 {
     public class EntityCreation
     {

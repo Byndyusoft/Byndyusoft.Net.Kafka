@@ -1,6 +1,6 @@
-namespace Byndyusoft.Net.Kafka.Sample
+namespace Api
 {
-    using Extensions;
+    using Byndyusoft.Net.Kafka.Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;

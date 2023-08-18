@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Byndyusoft.Net.Kafka.Api.Contracts</RootNamespace>
+		<AssemblyName>Byndyusoft.Net.Kafka.Api.Contracts</AssemblyName>
+	</PropertyGroup>
+
+</Project>

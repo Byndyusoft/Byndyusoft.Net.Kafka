@@ -18,17 +18,17 @@ namespace Byndyusoft.Net.Kafka.Middlewares
 
         public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
         {
-            var span = _tracer.BuildSpan("publish")
+            var spanBuilder = _tracer.BuildSpan("publish")
                 .WithTag(Tags.SpanKind.Key, Tags.SpanKindProducer)
-                .AsChildOf(_tracer.ActiveSpan)
-                .Start();
+                .AsChildOf(_tracer.ActiveSpan);
 
-            span.SetMessageContext(context);
-            _tracer.InjectMessageContextHeaders(span, context);
+            using (var span = spanBuilder.StartActive())
+            {
+                _tracer.ActiveSpan.SetMessageContext(context);
+                _tracer.InjectMessageContextHeaders(_tracer.ActiveSpan, context);
 
-            await next(context);
-
-            span.Finish();
+                await next(context);
+            }
         }
     }
 }

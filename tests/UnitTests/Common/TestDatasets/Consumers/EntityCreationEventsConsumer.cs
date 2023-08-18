@@ -1,4 +1,4 @@
-﻿namespace Byndyusoft.Net.Kafka.Sample.Consumers;
+﻿namespace Byndyusoft.Net.Kafka.Tests.Common.TestDatasets.Consumers;
 
 using KafkaFlow.TypedHandler;
 using MessageHandlers;

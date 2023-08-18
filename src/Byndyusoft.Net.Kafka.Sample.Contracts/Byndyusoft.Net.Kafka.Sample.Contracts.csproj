@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<RootNamespace>Byndyusoft.Net.Kafka.Sample.Contracts</RootNamespace>
-		<AssemblyName>Byndyusoft.Net.Kafka.Sample.Contracts</AssemblyName>
-	</PropertyGroup>
-
-</Project>
