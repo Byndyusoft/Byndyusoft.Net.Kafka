@@ -46,11 +46,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Byndyusoft.Net.Kafka\Byndyusoft.Net.Kafka.csproj" />
+		<Folder Include="Common\Infrastructure\" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Common\Infrastructure\" />
+	  <ProjectReference Include="..\..\src\Kafka\Kafka.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

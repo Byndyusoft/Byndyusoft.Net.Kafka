@@ -9,6 +9,7 @@ using OpenTracing;
 using OpenTracing.Mock;
 using OpenTracing.Tag;
 using System;
+using System.Linq;
 using Common.Generators;
 using Xunit;
 using System.Text;
