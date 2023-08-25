@@ -7,10 +7,20 @@
     /// </summary>
     public class KafkaSettings
     {
+        public KafkaSettings()
+        {
+            ProducerSettings = new KafkaProducerSettings();
+        }
+
         /// <summary>
         ///     Available hosts
         /// </summary>
         public string[] Hosts { get; set; } = default!;
+
+        /// <summary>
+        ///     Represent the Kafka producer settings
+        /// </summary>
+        public KafkaProducerSettings ProducerSettings { get; set; }
 
         /// <summary>
         ///     Represent the Kafka security information

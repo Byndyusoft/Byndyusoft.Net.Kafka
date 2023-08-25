@@ -15,12 +15,11 @@ using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
 
 internal static class ClusterConfigurationBuilderExtensions
 {
-    private const int MessageMaxSizeBytes = 20 * 1024 * 1024;
-
     public static IClusterConfigurationBuilder AddProducers(
         this IClusterConfigurationBuilder clusterConfigurationBuilder,
         IEnumerable<IKafkaProducer> producers,
-        string prefix
+        string prefix,
+        KafkaProducerSettings settings
     )
     {
         foreach (var producer in producers)
@@ -28,7 +27,7 @@ internal static class ClusterConfigurationBuilderExtensions
                 producer.Title,
                 producerConfigurationBuilder => producerConfigurationBuilder
                     .DefaultTopic(producer.Topic)
-                    .WithProducerConfig(CreateProducerConfig(producer, prefix))
+                    .WithProducerConfig(CreateProducerConfig(producer, prefix, settings))
                     .AddMiddlewares(
                         middlewares => middlewares
                             .Add<PublishMessageTracingMiddleware>()
@@ -78,7 +77,11 @@ internal static class ClusterConfigurationBuilderExtensions
         return clusterConfigurationBuilder;
     }
 
-    private static ProducerConfig CreateProducerConfig(IKafkaProducer producer, string prefix)
+    private static ProducerConfig CreateProducerConfig(
+        IKafkaProducer producer,
+        string prefix,
+        KafkaProducerSettings settings
+    )
     {
         return new ProducerConfig
                {
@@ -86,9 +89,9 @@ internal static class ClusterConfigurationBuilderExtensions
                    Acks = Acks.All,
                    EnableIdempotence = true,
                    MaxInFlight = 1,
-                   MessageSendMaxRetries = 3,
-                   MessageMaxBytes = MessageMaxSizeBytes,
-                   RetryBackoffMs = (int)TimeSpan.FromSeconds(1).TotalMilliseconds
+                   MessageSendMaxRetries = settings.MessageSendMaxRetries,
+                   MessageMaxBytes = settings.MessageMaxBytes,
+                   RetryBackoffMs = settings.RetryBackoffMs
                };
     }
 }

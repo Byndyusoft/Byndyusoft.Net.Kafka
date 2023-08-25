@@ -65,7 +65,7 @@ public static class ServiceCollectionExtensions
                                         information.Adapt(kafkaSettings.SecurityInformation);
                                 }
                             )
-                            .AddProducers(provider.GetServices<IKafkaProducer>(), callingAssemblyName)
+                            .AddProducers(provider.GetServices<IKafkaProducer>(), callingAssemblyName, kafkaSettings.ProducerSettings)
                             .AddConsumers(provider.GetServices<IKafkaConsumer>(), callingAssemblyName);
                     })
         );
