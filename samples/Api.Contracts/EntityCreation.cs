@@ -1,11 +1,10 @@
-﻿namespace Byndyusoft.Net.Kafka.Api.Contracts
+﻿namespace Byndyusoft.Net.Kafka.Api.Contracts;
+
+using System;
+
+public class EntityCreation
 {
-    using System;
+    public Guid Id { get; set; }
 
-    public class EntityCreation
-    {
-        public Guid Id { get; set; }
-
-        public string Text { get; set; } = default!;
-    }
+    public string Text { get; set; } = default!;
 }

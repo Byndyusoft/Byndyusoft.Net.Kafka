@@ -1,7 +1,7 @@
 ﻿namespace Byndyusoft.Net.Kafka.Extensions;
 
-using CaseExtensions;
 using System.Linq;
+using CaseExtensions;
 
 public static class KafkaProducerBaseExtensions
 {

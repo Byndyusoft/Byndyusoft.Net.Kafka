@@ -1,37 +1,36 @@
-﻿using System;
+﻿namespace Byndyusoft.Net.Kafka.Middlewares;
+
+using System;
 using System.Threading.Tasks;
-using Byndyusoft.Net.Kafka.Extensions;
+using Extensions;
 using KafkaFlow;
 using Microsoft.Extensions.Logging;
 using OpenTracing;
 
-namespace Byndyusoft.Net.Kafka.Middlewares
+internal class ErrorHandlingMiddleware : IMessageMiddleware
 {
-    internal class ErrorHandlingMiddleware : IMessageMiddleware
+    private readonly ILogger<ErrorHandlingMiddleware> _logger;
+    private readonly ITracer _tracer;
+
+    public ErrorHandlingMiddleware(ITracer tracer, ILoggerFactory loggerFactory)
     {
-        private readonly ITracer _tracer;
-        private readonly ILogger<ErrorHandlingMiddleware> _logger;
+        _tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
 
-        public ErrorHandlingMiddleware(ITracer tracer, ILoggerFactory loggerFactory)
+        if (loggerFactory == null)
+            throw new ArgumentNullException(nameof(loggerFactory));
+        _logger = loggerFactory.CreateLogger<ErrorHandlingMiddleware>();
+    }
+
+    public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
+    {
+        try
         {
-            _tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
-
-            if (loggerFactory == null)
-                throw new ArgumentNullException(nameof(loggerFactory));
-            _logger = loggerFactory.CreateLogger<ErrorHandlingMiddleware>();
+            await next(context);
         }
-
-        public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
+        catch (Exception ex)
         {
-            try
-            {
-                await next(context);
-            }
-            catch (Exception ex)
-            {
-                _tracer.ActiveSpan.SetException(ex);
-                _logger.LogError(ex, "Unexpected error");
-            }
+            _tracer.ActiveSpan.SetException(ex);
+            _logger.LogError(ex, "Unexpected error");
         }
     }
 }

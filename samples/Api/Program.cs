@@ -1,8 +1,8 @@
-namespace Api;
+namespace Byndyusoft.Net.Kafka.Api;
 
-using Byndyusoft.Tracing;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Tracing;
 
 public class Program
 {
@@ -12,7 +12,8 @@ public class Program
     }
 
     private static IHostBuilder CreateHostBuilder(string[] args)
-        => Host
+    {
+        return Host
             .CreateDefaultBuilder(args)
             .ConfigureServices(
                 (context, services) =>
@@ -24,4 +25,5 @@ public class Program
                         .AddJaegerTracer(context.Configuration)
             )
             .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+    }
 }

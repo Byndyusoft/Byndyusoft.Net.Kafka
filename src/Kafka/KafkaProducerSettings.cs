@@ -1,6 +1,6 @@
-﻿using System;
+﻿namespace Byndyusoft.Net.Kafka;
 
-namespace Byndyusoft.Net.Kafka;
+using System;
 
 /// <summary>
 ///     Settings to connection with Kafka

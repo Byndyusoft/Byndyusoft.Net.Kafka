@@ -1,8 +1,8 @@
-﻿namespace Api.Consumers.MessageHandlers;
+﻿namespace Byndyusoft.Net.Kafka.Api.Consumers.MessageHandlers;
 
 using System;
 using System.Threading.Tasks;
-using Byndyusoft.Net.Kafka.Api.Contracts;
+using Contracts;
 using KafkaFlow;
 using KafkaFlow.TypedHandler;
 using Microsoft.Extensions.Logging;

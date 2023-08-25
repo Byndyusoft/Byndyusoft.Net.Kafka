@@ -1,6 +1,5 @@
-﻿namespace Api.Consumers;
+﻿namespace Byndyusoft.Net.Kafka.Api.Consumers;
 
-using Byndyusoft.Net.Kafka;
 using KafkaFlow.TypedHandler;
 using MessageHandlers;
 

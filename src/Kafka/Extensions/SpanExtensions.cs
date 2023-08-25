@@ -1,4 +1,6 @@
-﻿using System;
+﻿namespace Byndyusoft.Net.Kafka.Extensions;
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using KafkaFlow;
@@ -6,67 +8,64 @@ using Newtonsoft.Json;
 using OpenTracing;
 using OpenTracing.Tag;
 
-namespace Byndyusoft.Net.Kafka.Extensions
+public static class SpanExtensions
 {
-    public static class SpanExtensions
+    public static void SetMessageContext(this ISpan span, IMessageContext messageContext)
     {
-        public static void SetMessageContext(this ISpan span, IMessageContext messageContext)
-        {
-            if (messageContext.HasProducerContext())
-                SetProducerContext(span, messageContext);
+        if (messageContext.HasProducerContext())
+            SetProducerContext(span, messageContext);
 
-            if (messageContext.HasConsumerContext())
-                SetConsumerContext(span, messageContext);
-        }
+        if (messageContext.HasConsumerContext())
+            SetConsumerContext(span, messageContext);
+    }
 
-        public static void SetException(this ISpan span, Exception exception)
-        {
-            span.SetTag(Tags.Error, true);
+    public static void SetException(this ISpan span, Exception exception)
+    {
+        span.SetTag(Tags.Error, true);
 
-            span.Log(
-                new Dictionary<string, object>(3)
-                {
-                    { LogFields.Event, Tags.Error.Key },
-                    { LogFields.ErrorKind, exception.GetType().Name },
-                    { LogFields.ErrorObject, exception }
-                }
-            );
-        }
+        span.Log(
+            new Dictionary<string, object>(3)
+            {
+                { LogFields.Event, Tags.Error.Key },
+                { LogFields.ErrorKind, exception.GetType().Name },
+                { LogFields.ErrorObject, exception }
+            }
+        );
+    }
 
-        private static void SetProducerContext(ISpan span, IMessageContext messageContext)
-        {
-            var producerContext = messageContext.ProducerContext;
-            span.SetTag("kafka.topic", producerContext.Topic);
-            
-            var log = new Dictionary<string, object>
-                      {
-                          ["message"] = JsonConvert.SerializeObject(messageContext.Message.Value)
-                      };
+    private static void SetProducerContext(ISpan span, IMessageContext messageContext)
+    {
+        var producerContext = messageContext.ProducerContext;
+        span.SetTag("kafka.topic", producerContext.Topic);
 
-            var partition = producerContext.Partition;
-            if (partition.HasValue)
-                log.Add("kafka.partition", partition.Value);
+        var log = new Dictionary<string, object>
+                  {
+                      ["message"] = JsonConvert.SerializeObject(messageContext.Message.Value)
+                  };
 
-            var offset = producerContext.Offset;
-            if (offset.HasValue)
-                log.Add("kafka.offset", offset.Value);
+        var partition = producerContext.Partition;
+        if (partition.HasValue)
+            log.Add("kafka.partition", partition.Value);
 
-            span.Log(log);
-        }
+        var offset = producerContext.Offset;
+        if (offset.HasValue)
+            log.Add("kafka.offset", offset.Value);
 
-        private static void SetConsumerContext(ISpan span, IMessageContext messageContext)
-        {
-            var consumerContext = messageContext.ConsumerContext;
-            span.SetTag("kafka.topic", consumerContext.Topic);
+        span.Log(log);
+    }
 
-            span.Log(
-                new Dictionary<string, object>
-                {
-                    ["kafka.partition"] = consumerContext.Partition,
-                    ["kafka.offset"] = consumerContext.Offset,
-                    ["message"] = Encoding.UTF8.GetString((byte[])messageContext.Message.Value)
-                }
-            );
-        }
+    private static void SetConsumerContext(ISpan span, IMessageContext messageContext)
+    {
+        var consumerContext = messageContext.ConsumerContext;
+        span.SetTag("kafka.topic", consumerContext.Topic);
+
+        span.Log(
+            new Dictionary<string, object>
+            {
+                ["kafka.partition"] = consumerContext.Partition,
+                ["kafka.offset"] = consumerContext.Offset,
+                ["message"] = Encoding.UTF8.GetString((byte[])messageContext.Message.Value)
+            }
+        );
     }
 }

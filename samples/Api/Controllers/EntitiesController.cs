@@ -1,8 +1,8 @@
-﻿namespace Api.Controllers;
+﻿namespace Byndyusoft.Net.Kafka.Api.Controllers;
 
 using System;
 using System.Threading.Tasks;
-using Byndyusoft.Net.Kafka.Api.Contracts;
+using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Producers;
 
