@@ -17,7 +17,7 @@
                     && type is { IsClass: true, IsAbstract: false }
                 )
                 .Cast<Type>()
-                .ToList();
+                .ToArray();
         }
 
         public static IEnumerable<Assembly> LoadReferencedAssemblies(this Assembly assembly)
