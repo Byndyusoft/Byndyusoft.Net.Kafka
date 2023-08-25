@@ -1,7 +1,7 @@
 # Byndyusoft.Net.Kafka
 
 Высокоуровневая библиотека для работы с kafka. 
-Базируется на KafkaFlow, которая в свою очередь основана на Confluent Kafka Client.
+Базируется на [KafkaFlow](https://github.com/Farfetch/kafkaflow), которая в свою очередь основана на Confluent Kafka Client.
 
 ## Quickstart
 
