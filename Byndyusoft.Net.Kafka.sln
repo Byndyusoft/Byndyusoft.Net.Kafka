@@ -9,19 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
-		samples\docker-compose.yml = samples\docker-compose.yml
-		icon.png = icon.png
-		LICENSE = LICENSE
-		README.md = README.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{D1DCE845-3951-4CF0-8DD4-EB0241345E3C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflow", "workflow", "{17771C9D-D2DB-496D-9DC8-B78C94E05F94}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\pushOrPullRequest.yml = .github\workflows\pushOrPullRequest.yml
-		.github\workflows\release.yml = .github\workflows\release.yml
-		.github\workflows\releasePrerelease.yml = .github\workflows\releasePrerelease.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{B78EA760-26CD-4D0C-8324-31ECF0DA0013}"
@@ -29,6 +16,15 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "samples\Api\Api.csproj", "{C5B12C46-052D-4C5E-A795-1B6471450835}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Contracts", "samples\Api.Contracts\Api.Contracts.csproj", "{97E2E8B3-7418-4038-84F5-FD80B3F1E1FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8131AB20-CDEC-4DBE-8EA5-0CC8EEEE4353}"
+	ProjectSection(SolutionItems) = preProject
+		samples\docker-compose.yml = samples\docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{55F4A165-48FE-4F6F-997F-F76621F6B972}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A5D4CCEF-6432-481E-90DA-61FD09AF7913}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,7 +53,10 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{17771C9D-D2DB-496D-9DC8-B78C94E05F94} = {D1DCE845-3951-4CF0-8DD4-EB0241345E3C}
+		{77F03E9B-FD33-4B1D-B365-059B6FCC9A3A} = {55F4A165-48FE-4F6F-997F-F76621F6B972}
+		{B78EA760-26CD-4D0C-8324-31ECF0DA0013} = {A5D4CCEF-6432-481E-90DA-61FD09AF7913}
+		{C5B12C46-052D-4C5E-A795-1B6471450835} = {8131AB20-CDEC-4DBE-8EA5-0CC8EEEE4353}
+		{97E2E8B3-7418-4038-84F5-FD80B3F1E1FD} = {8131AB20-CDEC-4DBE-8EA5-0CC8EEEE4353}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5A3EF0C-96D2-472C-A367-AB34B065DC56}
