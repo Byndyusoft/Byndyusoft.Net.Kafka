@@ -3,74 +3,59 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using DependencyInjection;
     using Handlers;
     using KafkaFlow;
     using KafkaFlow.Configuration;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Options;
 
     public static class ServiceCollectionExtensions
     {
         private static IServiceCollection AddKafkaOptions(
             this IServiceCollection services,
             IConfiguration configuration
-        )
-        {
-            return services
-                .AddOptions()
-                .Configure<KafkaSettings>(configuration.GetSection(nameof(KafkaSettings)));
-        }
-
-        /// <summary>
-        /// Register Kafka in DI
-        /// </summary>
-        public static IServiceCollection AddKafkaBus(
-            this IServiceCollection services,
-            IConfiguration configuration
-        )
-        {
-            var callingAssembly = Assembly.GetCallingAssembly();
-            var assemblies = callingAssembly.LoadReferencedAssemblies().ToArray();
-            return services
-                .AddKafkaOptions(configuration)
-                .AddProducerServices(assemblies)
-                .AddMessageHandles(assemblies)
-                .AddConsumerServices(assemblies)
-                .AddKafka(configuration, callingAssembly);
-        }
+        ) => services
+            .AddOptions()
+            .Configure<KafkaSettings>(configuration.GetSection(nameof(KafkaSettings)));
 
         private static IServiceCollection AddKafka(
             this IServiceCollection services,
-            IConfiguration configuration,
             Assembly callingAssembly
         )
         {
-            var provider = services.BuildServiceProvider();
             var callingAssemblyName = callingAssembly.GetName().Name!;
-            var kafkaSettings = configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>();
-            return services.AddKafka(
-                kafka => kafka
-                    .UseLogHandler<LoggerHandler>()
-                    .AddOpenTelemetryInstrumentation()
-                    .AddCluster(
-                        cluster =>
-                            {
-                                cluster
-                                    .WithBrokers(kafkaSettings.Hosts)
-                                    .WithSecurityInformation(
-                                        information =>
-                                            {
-                                                information.SaslMechanism = SaslMechanism.ScramSha512;
-                                                information.SecurityProtocol = SecurityProtocol.SaslPlaintext;
-                                                information.SaslUsername = kafkaSettings.Username;
-                                                information.SaslPassword = kafkaSettings.Password;
-                                            }
+            var dependencyConfigurator = new DependencyConfigurator(services);
+            return services
+                .AddSingleton<IDependencyResolver>(provider => new DependencyResolver(provider))
+                .AddSingleton(
+                    provider =>
+                        {
+                            var kafkaSettings = provider.GetRequiredService<IOptions<KafkaSettings>>().Value;
+                            return new KafkaFlowConfigurator(
+                                dependencyConfigurator,
+                                kafka => kafka
+                                    .UseLogHandler<LoggerHandler>()
+                                    .AddOpenTelemetryInstrumentation()
+                                    .AddCluster(
+                                        cluster => cluster
+                                            .WithBrokers(kafkaSettings.Hosts)
+                                            .WithSecurityInformation(
+                                                information =>
+                                                    {
+                                                        information.SaslMechanism = SaslMechanism.ScramSha512;
+                                                        information.SecurityProtocol = SecurityProtocol.SaslPlaintext;
+                                                        information.SaslUsername = kafkaSettings.Username;
+                                                        information.SaslPassword = kafkaSettings.Password;
+                                                    }
+                                            )
+                                            .AddProducers(callingAssemblyName, provider.GetServices<IKafkaProducer>())
+                                            .AddConsumers(callingAssemblyName, provider.GetServices<IKafkaConsumer>())
                                     )
-                                    .AddProducers(callingAssemblyName, provider.GetServices<IKafkaProducer>())
-                                    .AddConsumers(callingAssemblyName, provider.GetServices<IKafkaConsumer>());
-                            }
-                    )
-            );
+                            );
+                        }
+                );
         }
 
         private static IServiceCollection AddProducerServices(
@@ -121,6 +106,24 @@
             }
 
             return services;
+        }
+
+        /// <summary>
+        /// Register Kafka in DI
+        /// </summary>
+        public static IServiceCollection AddKafkaBus(
+            this IServiceCollection services,
+            IConfiguration configuration
+        )
+        {
+            var callingAssembly = Assembly.GetCallingAssembly();
+            var assemblies = callingAssembly.LoadReferencedAssemblies().ToArray();
+            return services
+                .AddKafkaOptions(configuration)
+                .AddKafka(callingAssembly)
+                .AddProducerServices(assemblies)
+                .AddMessageHandles(assemblies)
+                .AddConsumerServices(assemblies);
         }
     }
 }
