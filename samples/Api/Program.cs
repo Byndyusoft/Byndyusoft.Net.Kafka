@@ -17,7 +17,6 @@ namespace MusicalityLabs.Storage.Api
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
             var serviceName = typeof(Program).Assembly.GetName().Name!;
-
             return Host.CreateDefaultBuilder(args)
                 .UseSerilog(
                     (context, configuration) => configuration
