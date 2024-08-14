@@ -1,31 +1,33 @@
-﻿namespace Byndyusoft.Net.Kafka;
-
-using System;
-using System.Threading.Tasks;
-using CaseExtensions;
-using KafkaFlow.Producers;
-
-/// <summary>
-///     Produce T messages to kafka
-/// </summary>
-public abstract class KafkaProducerBase<T> : IKafkaProducer<T>
+﻿namespace Byndyusoft.Net.Kafka
 {
-    private readonly IProducerAccessor _producers;
+    using System;
+    using System.Threading.Tasks;
+    using CaseExtensions;
+    using KafkaFlow.Producers;
 
-    protected KafkaProducerBase(IProducerAccessor producers, string title)
+    /// <summary>
+    ///     Produce T messages to kafka
+    /// </summary>
+    public abstract class KafkaProducerBase<T> : IKafkaProducer<T>
     {
-        _producers = producers ?? throw new ArgumentNullException(nameof(producers));
-        if (string.IsNullOrEmpty(title))
-            throw new ArgumentNullException(nameof(title));
-        Title = title.ToSnakeCase();
-    }
+        private readonly IProducerAccessor _producers;
 
-    public string Title { get; }
-    public abstract string Topic { get; }
-    public abstract string KeyGenerator(T message);
+        protected KafkaProducerBase(IProducerAccessor producers, string title)
+        {
+            _producers = producers ?? throw new ArgumentNullException(nameof(producers));
 
-    public Task ProduceAsync(T message)
-    {
-        return _producers[Title].ProduceAsync(KeyGenerator(message), message);
+            if (string.IsNullOrEmpty(title))
+                throw new ArgumentNullException(nameof(title));
+            Title = title.ToSnakeCase();
+        }
+
+        public string Title { get; }
+        public abstract string Topic { get; }
+        public abstract string KeyGenerator(T message);
+
+        public Task ProduceAsync(T message)
+        {
+            return _producers[Title].ProduceAsync(KeyGenerator(message), message);
+        }
     }
 }

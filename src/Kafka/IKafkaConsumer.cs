@@ -1,19 +1,20 @@
-﻿namespace Byndyusoft.Net.Kafka;
-
-using KafkaFlow.TypedHandler;
-
-/// <summary>
-///     Kafka messages consumer
-/// </summary>
-public interface IKafkaConsumer
+﻿namespace Byndyusoft.Net.Kafka
 {
-    /// <summary>
-    ///     Kafka topic name
-    /// </summary>
-    public string Topic { get; }
+    using KafkaFlow.TypedHandler;
 
     /// <summary>
-    ///     Message handling method
+    ///     Kafka messages consumer
     /// </summary>
-    public IMessageHandler MessageHandler { get; }
+    public interface IKafkaConsumer
+    {
+        /// <summary>
+        ///     Kafka topic name
+        /// </summary>
+        public string Topic { get; }
+
+        /// <summary>
+        ///     Message handling method
+        /// </summary>
+        public IMessageHandler MessageHandler { get; }
+    }
 }

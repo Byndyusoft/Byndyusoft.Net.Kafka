@@ -1,11 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<IsPackable>true</IsPackable>
-		<AssemblyName>Byndyusoft.Net.Kafka</AssemblyName>
-		<RootNamespace>Byndyusoft.Net.Kafka</RootNamespace>
-	</PropertyGroup>
-
 	<ItemGroup>
 		<PackageReference Include="CaseExtensions" Version="1.1.0" />
 		<PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="2.2.13" />

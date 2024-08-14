@@ -1,97 +1,98 @@
-﻿namespace Byndyusoft.Net.Kafka.Extensions;
-
-using System;
-using System.Collections.Generic;
-using Confluent.Kafka;
-using KafkaFlow;
-using KafkaFlow.Configuration;
-using KafkaFlow.Retry;
-using KafkaFlow.Serializer;
-using KafkaFlow.TypedHandler;
-using Middlewares;
-using Newtonsoft.Json;
-using Acks = Confluent.Kafka.Acks;
-using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
-
-internal static class ClusterConfigurationBuilderExtensions
+﻿namespace Byndyusoft.Net.Kafka.Extensions
 {
-    public static IClusterConfigurationBuilder AddProducers(
-        this IClusterConfigurationBuilder clusterConfigurationBuilder,
-        IEnumerable<IKafkaProducer> producers,
-        string prefix,
-        KafkaProducerSettings settings
-    )
-    {
-        foreach (var producer in producers)
-            clusterConfigurationBuilder.AddProducer(
-                producer.Title,
-                producerConfigurationBuilder => producerConfigurationBuilder
-                    .DefaultTopic(producer.Topic)
-                    .WithProducerConfig(CreateProducerConfig(producer, prefix, settings))
-                    .AddMiddlewares(
-                        middlewares => middlewares
-                            .Add<PublishMessageTracingMiddleware>()
-                            .Add<ErrorHandlingMiddleware>()
-                            .AddSerializer(
-                                _ => new NewtonsoftJsonSerializer(new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto })
-                            )
-                    )
-            );
+    using System;
+    using System.Collections.Generic;
+    using Confluent.Kafka;
+    using KafkaFlow;
+    using KafkaFlow.Configuration;
+    using KafkaFlow.Retry;
+    using KafkaFlow.Serializer;
+    using KafkaFlow.TypedHandler;
+    using Middlewares;
+    using Newtonsoft.Json;
+    using Acks = Confluent.Kafka.Acks;
+    using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
 
-        return clusterConfigurationBuilder;
-    }
-
-    public static IClusterConfigurationBuilder AddConsumers(
-        this IClusterConfigurationBuilder clusterConfigurationBuilder,
-        IEnumerable<IKafkaConsumer> consumers,
-        string prefix
-    )
+    internal static class ClusterConfigurationBuilderExtensions
     {
-        foreach (var consumer in consumers)
-            clusterConfigurationBuilder.AddConsumer(
-                consumerConfigurationBuilder => consumerConfigurationBuilder
-                    .Topic(consumer.Topic)
-                    .WithGroupId(consumer.BuildConsumersGroupId(prefix))
-                    .WithBufferSize(100)
-                    .WithWorkersCount(10)
-                    .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-                    .AddMiddlewares(
-                        middlewares =>
-                            middlewares
-                                .Add<ConsumeMessageTracingMiddleware>()
+        public static IClusterConfigurationBuilder AddProducers(
+            this IClusterConfigurationBuilder clusterConfigurationBuilder,
+            IEnumerable<IKafkaProducer> producers,
+            string prefix,
+            KafkaProducerSettings settings
+        )
+        {
+            foreach (var producer in producers)
+                clusterConfigurationBuilder.AddProducer(
+                    producer.Title,
+                    producerConfigurationBuilder => producerConfigurationBuilder
+                        .DefaultTopic(producer.Topic)
+                        .WithProducerConfig(CreateProducerConfig(producer, prefix, settings))
+                        .AddMiddlewares(
+                            middlewares => middlewares
+                                .Add<PublishMessageTracingMiddleware>()
                                 .Add<ErrorHandlingMiddleware>()
                                 .AddSerializer(
-                                    _ => new NewtonsoftJsonSerializer(
-                                        new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto }
+                                    _ => new NewtonsoftJsonSerializer(new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.Auto})
+                                )
+                        )
+                );
+
+            return clusterConfigurationBuilder;
+        }
+
+        public static IClusterConfigurationBuilder AddConsumers(
+            this IClusterConfigurationBuilder clusterConfigurationBuilder,
+            IEnumerable<IKafkaConsumer> consumers,
+            string prefix
+        )
+        {
+            foreach (var consumer in consumers)
+                clusterConfigurationBuilder.AddConsumer(
+                    consumerConfigurationBuilder => consumerConfigurationBuilder
+                        .Topic(consumer.Topic)
+                        .WithGroupId(consumer.BuildConsumersGroupId(prefix))
+                        .WithBufferSize(100)
+                        .WithWorkersCount(10)
+                        .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+                        .AddMiddlewares(
+                            middlewares =>
+                                middlewares
+                                    .Add<ConsumeMessageTracingMiddleware>()
+                                    .Add<ErrorHandlingMiddleware>()
+                                    .AddSerializer(
+                                        _ => new NewtonsoftJsonSerializer(
+                                            new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.Auto}
+                                        )
                                     )
-                                )
-                                .AddTypedHandlers(h => h.AddHandlers(new[] { consumer.MessageHandler.GetType() }))
-                                .RetrySimple(
-                                    config => config
-                                        .TryTimes(3)
-                                        .WithTimeBetweenTriesPlan(retryNumber => TimeSpan.FromSeconds(Math.Pow(2, retryNumber)))
-                                )
-                    )
-            );
+                                    .AddTypedHandlers(h => h.AddHandlers(new[] {consumer.MessageHandler.GetType()}))
+                                    .RetrySimple(
+                                        config => config
+                                            .TryTimes(3)
+                                            .WithTimeBetweenTriesPlan(retryNumber => TimeSpan.FromSeconds(Math.Pow(2, retryNumber)))
+                                    )
+                        )
+                );
 
-        return clusterConfigurationBuilder;
-    }
+            return clusterConfigurationBuilder;
+        }
 
-    private static ProducerConfig CreateProducerConfig(
-        IKafkaProducer producer,
-        string prefix,
-        KafkaProducerSettings settings
-    )
-    {
-        return new ProducerConfig
-               {
-                   ClientId = producer.BuildClientId(prefix),
-                   Acks = Acks.All,
-                   EnableIdempotence = true,
-                   MaxInFlight = 1,
-                   MessageSendMaxRetries = settings.MessageSendMaxRetries,
-                   MessageMaxBytes = settings.MessageMaxBytes,
-                   RetryBackoffMs = settings.RetryBackoffMs
-               };
+        private static ProducerConfig CreateProducerConfig(
+            IKafkaProducer producer,
+            string prefix,
+            KafkaProducerSettings settings
+        )
+        {
+            return new ProducerConfig
+            {
+                ClientId = producer.BuildClientId(prefix),
+                Acks = Acks.All,
+                EnableIdempotence = true,
+                MaxInFlight = 1,
+                MessageSendMaxRetries = settings.MessageSendMaxRetries,
+                MessageMaxBytes = settings.MessageMaxBytes,
+                RetryBackoffMs = settings.RetryBackoffMs
+            };
+        }
     }
 }

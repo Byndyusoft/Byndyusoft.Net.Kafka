@@ -1,36 +1,37 @@
-﻿namespace Byndyusoft.Net.Kafka.Middlewares;
-
-using System;
-using System.Threading.Tasks;
-using Extensions;
-using KafkaFlow;
-using Microsoft.Extensions.Logging;
-using OpenTracing;
-
-internal class ErrorHandlingMiddleware : IMessageMiddleware
+﻿namespace Byndyusoft.Net.Kafka.Middlewares
 {
-    private readonly ILogger<ErrorHandlingMiddleware> _logger;
-    private readonly ITracer _tracer;
+    using System;
+    using System.Threading.Tasks;
+    using Extensions;
+    using KafkaFlow;
+    using Microsoft.Extensions.Logging;
+    using OpenTracing;
 
-    public ErrorHandlingMiddleware(ITracer tracer, ILoggerFactory loggerFactory)
+    internal class ErrorHandlingMiddleware : IMessageMiddleware
     {
-        _tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
+        private readonly ILogger<ErrorHandlingMiddleware> _logger;
+        private readonly ITracer _tracer;
 
-        if (loggerFactory == null)
-            throw new ArgumentNullException(nameof(loggerFactory));
-        _logger = loggerFactory.CreateLogger<ErrorHandlingMiddleware>();
-    }
-
-    public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
-    {
-        try
+        public ErrorHandlingMiddleware(ITracer tracer, ILoggerFactory loggerFactory)
         {
-            await next(context);
+            _tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
+
+            if (loggerFactory == null)
+                throw new ArgumentNullException(nameof(loggerFactory));
+            _logger = loggerFactory.CreateLogger<ErrorHandlingMiddleware>();
         }
-        catch (Exception ex)
+
+        public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
         {
-            _tracer.ActiveSpan.SetException(ex);
-            _logger.LogError(ex, "Unexpected error");
+            try
+            {
+                await next(context);
+            }
+            catch (Exception ex)
+            {
+                _tracer.ActiveSpan.SetException(ex);
+                _logger.LogError(ex, "Unexpected error");
+            }
         }
     }
 }

@@ -1,30 +1,31 @@
-﻿namespace Byndyusoft.Net.Kafka.Api.Consumers.MessageHandlers;
-
-using System;
-using System.Threading.Tasks;
-using Contracts;
-using KafkaFlow;
-using KafkaFlow.TypedHandler;
-using Microsoft.Extensions.Logging;
-
-public sealed class EntityCreationMessageHandler : IMessageHandler<EntityCreation>
+﻿namespace MusicalityLabs.Storage.Api.Consumers.MessageHandlers
 {
-    private readonly ILogger<EntityCreationMessageHandler> _logger;
+    using System;
+    using System.Threading.Tasks;
+    using KafkaFlow;
+    using KafkaFlow.TypedHandler;
+    using Microsoft.Extensions.Logging;
+    using Contracts;
 
-    public EntityCreationMessageHandler(ILogger<EntityCreationMessageHandler> logger)
+    public sealed class EntityCreationMessageHandler : IMessageHandler<EntityCreation>
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+        private readonly ILogger<EntityCreationMessageHandler> _logger;
 
-    public Task Handle(IMessageContext context, EntityCreation someEvent)
-    {
-        _logger.LogInformation(
-            "Partition: {0} | Offset: {1} | Message: {2}",
-            context.ConsumerContext.Partition,
-            context.ConsumerContext.Offset,
-            someEvent.Text
-        );
+        public EntityCreationMessageHandler(ILogger<EntityCreationMessageHandler> logger)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        }
 
-        return Task.FromResult(someEvent);
+        public Task Handle(IMessageContext context, EntityCreation someEvent)
+        {
+            _logger.LogInformation(
+                "Partition: {0} | Offset: {1} | Message: {2}",
+                context.ConsumerContext.Partition,
+                context.ConsumerContext.Offset,
+                someEvent.Text
+            );
+
+            return Task.FromResult(someEvent);
+        }
     }
 }

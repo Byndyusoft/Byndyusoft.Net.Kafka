@@ -1,33 +1,34 @@
-﻿namespace Byndyusoft.Net.Kafka.Middlewares;
-
-using System;
-using System.Threading.Tasks;
-using Extensions;
-using KafkaFlow;
-using OpenTracing;
-using OpenTracing.Tag;
-
-internal class PublishMessageTracingMiddleware : IMessageMiddleware
+﻿namespace Byndyusoft.Net.Kafka.Middlewares
 {
-    private readonly ITracer _tracer;
+    using System;
+    using System.Threading.Tasks;
+    using Extensions;
+    using KafkaFlow;
+    using OpenTracing;
+    using OpenTracing.Tag;
 
-    public PublishMessageTracingMiddleware(ITracer tracer)
+    internal class PublishMessageTracingMiddleware : IMessageMiddleware
     {
-        _tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
-    }
+        private readonly ITracer _tracer;
 
-    public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
-    {
-        var spanBuilder = _tracer.BuildSpan("publish")
-            .WithTag(Tags.SpanKind.Key, Tags.SpanKindProducer)
-            .AsChildOf(_tracer.ActiveSpan);
-
-        using (var span = spanBuilder.StartActive())
+        public PublishMessageTracingMiddleware(ITracer tracer)
         {
-            _tracer.ActiveSpan.SetMessageContext(context);
-            _tracer.InjectMessageContextHeaders(_tracer.ActiveSpan, context);
+            _tracer = tracer ?? throw new ArgumentNullException(nameof(tracer));
+        }
 
-            await next(context);
+        public async Task Invoke(IMessageContext context, MiddlewareDelegate next)
+        {
+            var spanBuilder = _tracer.BuildSpan("publish")
+                .WithTag(Tags.SpanKind.Key, Tags.SpanKindProducer)
+                .AsChildOf(_tracer.ActiveSpan);
+
+            using (var span = spanBuilder.StartActive())
+            {
+                _tracer.ActiveSpan.SetMessageContext(context);
+                _tracer.InjectMessageContextHeaders(_tracer.ActiveSpan, context);
+
+                await next(context);
+            }
         }
     }
 }

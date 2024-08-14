@@ -1,16 +1,17 @@
-﻿namespace Byndyusoft.Net.Kafka.Api.Consumers;
-
-using KafkaFlow.TypedHandler;
-using MessageHandlers;
-
-public sealed class EntityCreationEventsConsumer : IKafkaConsumer
+﻿namespace MusicalityLabs.Storage.Api.Consumers
 {
-    public EntityCreationEventsConsumer(EntityCreationMessageHandler messageHandler)
+    using Byndyusoft.Net.Kafka;
+    using KafkaFlow.TypedHandler;
+    using MessageHandlers;
+    public sealed class EntityCreationEventsConsumer : IKafkaConsumer
     {
-        MessageHandler = messageHandler;
+        public EntityCreationEventsConsumer(EntityCreationMessageHandler messageHandler)
+        {
+            MessageHandler = messageHandler;
+        }
+
+        public string Topic => "project.entity.creation";
+
+        public IMessageHandler MessageHandler { get; }
     }
-
-    public string Topic => "project.entity.creation";
-
-    public IMessageHandler MessageHandler { get; }
 }

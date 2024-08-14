@@ -1,10 +1,11 @@
-﻿namespace Byndyusoft.Net.Kafka.Api.Contracts;
-
-using System;
-
-public class EntityCreation
+﻿namespace MusicalityLabs.Storage.Api.Contracts
 {
-    public Guid Id { get; set; }
+    using System;
 
-    public string Text { get; set; } = default!;
+    public class EntityCreation
+    {
+        public Guid Id { get; set; }
+
+        public string Text { get; set; } = default!;
+    }
 }

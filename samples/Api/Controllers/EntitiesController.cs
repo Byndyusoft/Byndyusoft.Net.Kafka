@@ -1,31 +1,32 @@
-﻿namespace Byndyusoft.Net.Kafka.Api.Controllers;
-
-using System;
-using System.Threading.Tasks;
-using Contracts;
-using Microsoft.AspNetCore.Mvc;
-using Producers;
-
-[ApiController]
-[Route("[controller]")]
-public class EntitiesController : ControllerBase
+﻿namespace MusicalityLabs.Storage.Api.Controllers
 {
-    private readonly EntityCreationEventsProducer _exampleProducer;
+    using System;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Contracts;
+    using Producers;
 
-    public EntitiesController(EntityCreationEventsProducer exampleProducer)
+    [ApiController]
+    [Route("[controller]")]
+    public class EntitiesController : ControllerBase
     {
-        _exampleProducer = exampleProducer;
-    }
+        private readonly EntityCreationEventsProducer _exampleProducer;
 
-    [HttpPost]
-    public async Task CreateEntity([FromBody] string text)
-    {
-        var exampleMessageDto = new EntityCreation
-                                {
-                                    Text = text,
-                                    Id = Guid.NewGuid()
-                                };
+        public EntitiesController(EntityCreationEventsProducer exampleProducer)
+        {
+            _exampleProducer = exampleProducer;
+        }
 
-        await _exampleProducer.ProduceAsync(exampleMessageDto);
+        [HttpPost]
+        public async Task CreateEntity([FromBody] string text)
+        {
+            var exampleMessageDto = new EntityCreation
+            {
+                Text = text,
+                Id = Guid.NewGuid()
+            };
+
+            await _exampleProducer.ProduceAsync(exampleMessageDto);
+        }
     }
 }

@@ -1,19 +1,21 @@
-﻿namespace Byndyusoft.Net.Kafka.Api.Producers;
-
-using Contracts;
-using KafkaFlow.Producers;
-
-public class EntityCreationEventsProducer : KafkaProducerBase<EntityCreation>
+﻿namespace MusicalityLabs.Storage.Api.Producers
 {
-    public EntityCreationEventsProducer(IProducerAccessor producers)
-        : base(producers, nameof(EntityCreationEventsProducer))
-    {
-    }
+    using Byndyusoft.Net.Kafka;
+    using KafkaFlow.Producers;
+    using Contracts;
 
-    public override string Topic => "project.entity.creation";
-
-    public override string KeyGenerator(EntityCreation entityCreation)
+    public class EntityCreationEventsProducer : KafkaProducerBase<EntityCreation>
     {
-        return entityCreation.Id.ToString();
+        public EntityCreationEventsProducer(IProducerAccessor producers)
+            : base(producers, nameof(EntityCreationEventsProducer))
+        {
+        }
+
+        public override string Topic => "project.entity.creation";
+
+        public override string KeyGenerator(EntityCreation entityCreation)
+        {
+            return entityCreation.Id.ToString();
+        }
     }
 }

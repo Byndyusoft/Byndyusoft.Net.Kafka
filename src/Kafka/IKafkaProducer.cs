@@ -1,35 +1,36 @@
-﻿namespace Byndyusoft.Net.Kafka;
-
-using System.Threading.Tasks;
-
-/// <summary>
-///     Produce messages to kafka
-/// </summary>
-public interface IKafkaProducer
+﻿namespace Byndyusoft.Net.Kafka
 {
-    /// <summary>
-    ///     Kafka title name
-    /// </summary>
-    public string Title { get; }
+    using System.Threading.Tasks;
 
     /// <summary>
-    ///     Kafka topic name
+    ///     Produce messages to kafka
     /// </summary>
-    public string Topic { get; }
-}
+    public interface IKafkaProducer
+    {
+        /// <summary>
+        ///     Kafka title name
+        /// </summary>
+        public string Title { get; }
 
-/// <summary>
-///     Produce T messages to kafka
-/// </summary>
-public interface IKafkaProducer<in T> : IKafkaProducer
-{
-    /// <summary>
-    ///     Generate key
-    /// </summary>
-    public string KeyGenerator(T message);
+        /// <summary>
+        ///     Kafka topic name
+        /// </summary>
+        public string Topic { get; }
+    }
 
     /// <summary>
-    ///     Push message to queue
+    ///     Produce T messages to kafka
     /// </summary>
-    public Task ProduceAsync(T message);
+    public interface IKafkaProducer<in T> : IKafkaProducer
+    {
+        /// <summary>
+        ///     Generate key
+        /// </summary>
+        public string KeyGenerator(T message);
+
+        /// <summary>
+        ///     Push message to queue
+        /// </summary>
+        public Task ProduceAsync(T message);
+    }
 }
