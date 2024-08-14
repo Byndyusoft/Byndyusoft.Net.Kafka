@@ -2,19 +2,16 @@
 
 	<ItemGroup>
 		<PackageReference Include="CaseExtensions" Version="1.1.0" />
-		<PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="2.2.13" />
-		<PackageReference Include="KafkaFlow.Retry" Version="1.0.6" />
-		<PackageReference Include="KafkaFlow.Retry.API" Version="1.0.6" />
-		<PackageReference Include="KafkaFlow.Serializer" Version="2.2.13" />
-		<PackageReference Include="KafkaFlow.Serializer.NewtonsoftJson" Version="2.2.13" />
-		<PackageReference Include="Mapster" Version="7.3.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.18" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.18" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.8" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="3.1.8" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8" />
-		<PackageReference Include="OpenTracing" Version="0.12.1" />
+		<PackageReference Include="KafkaFlow" Version="3.0.8" />
+		<PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="3.0.8" />
+		<PackageReference Include="KafkaFlow.OpenTelemetry" Version="3.0.8" />
+		<PackageReference Include="KafkaFlow.Retry.API" Version="3.0.1" />
+		<PackageReference Include="KafkaFlow.Serializer.NewtonsoftJson" Version="3.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
 	</ItemGroup>
 
 </Project>

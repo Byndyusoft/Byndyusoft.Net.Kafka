@@ -1,6 +1,6 @@
 ﻿namespace Byndyusoft.Net.Kafka
 {
-    using KafkaFlow.TypedHandler;
+    using KafkaFlow;
 
     /// <summary>
     ///     Kafka messages consumer

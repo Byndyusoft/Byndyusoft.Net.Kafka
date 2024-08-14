@@ -8,8 +8,8 @@
         public static string BuildConsumersGroupId(this IKafkaConsumer consumer, string solutionName)
         {
             var solutionNameParts = solutionName.Split('.').ToArray();
-            var project = solutionNameParts[0];
-            var service = string.Join("_", solutionNameParts.Skip(1).Select(x => x.ToSnakeCase()));
+            var project = solutionNameParts[1];
+            var service = string.Join("_", solutionNameParts.Skip(2).Select(x => x.ToSnakeCase()));
 
             return $"{project}.{service}.{consumer.Topic.Replace(".", "_")}".ToLower();
         }

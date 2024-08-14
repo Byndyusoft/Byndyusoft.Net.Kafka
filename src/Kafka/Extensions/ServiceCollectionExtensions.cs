@@ -5,32 +5,12 @@
     using System.Reflection;
     using Handlers;
     using KafkaFlow;
-    using KafkaFlow.TypedHandler;
-    using Mapster;
+    using KafkaFlow.Configuration;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class ServiceCollectionExtensions
     {
-        /// <summary>
-        ///     Register Kafka in DI
-        /// </summary>
-        public static IServiceCollection AddKafkaBus(
-            this IServiceCollection services,
-            IConfiguration configuration
-        )
-        {
-            var callingAssembly = Assembly.GetCallingAssembly();
-            var assemblies = callingAssembly.LoadReferencedAssemblies().ToArray();
-
-            return services
-                .AddKafkaOptions(configuration)
-                .AddKafka(configuration, callingAssembly)
-                .AddProducerServices(assemblies)
-                .AddMessageHandles(assemblies)
-                .AddConsumerServices(assemblies);
-        }
-
         private static IServiceCollection AddKafkaOptions(
             this IServiceCollection services,
             IConfiguration configuration
@@ -41,6 +21,24 @@
                 .Configure<KafkaSettings>(configuration.GetSection(nameof(KafkaSettings)));
         }
 
+        /// <summary>
+        /// Register Kafka in DI
+        /// </summary>
+        public static IServiceCollection AddKafkaBus(
+            this IServiceCollection services,
+            IConfiguration configuration
+        )
+        {
+            var callingAssembly = Assembly.GetCallingAssembly();
+            var assemblies = callingAssembly.LoadReferencedAssemblies().ToArray();
+            return services
+                .AddKafkaOptions(configuration)
+                .AddKafka(configuration, callingAssembly)
+                .AddProducerServices(assemblies)
+                .AddMessageHandles(assemblies)
+                .AddConsumerServices(assemblies);
+        }
+
         private static IServiceCollection AddKafka(
             this IServiceCollection services,
             IConfiguration configuration,
@@ -48,13 +46,12 @@
         )
         {
             var provider = services.BuildServiceProvider();
-
-            var kafkaSettings = configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>();
             var callingAssemblyName = callingAssembly.GetName().Name!;
-
+            var kafkaSettings = configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>();
             return services.AddKafka(
                 kafka => kafka
                     .UseLogHandler<LoggerHandler>()
+                    .AddOpenTelemetryInstrumentation()
                     .AddCluster(
                         cluster =>
                             {
@@ -63,12 +60,14 @@
                                     .WithSecurityInformation(
                                         information =>
                                             {
-                                                if (kafkaSettings.SecurityInformation != null)
-                                                    information.Adapt(kafkaSettings.SecurityInformation);
+                                                information.SaslMechanism = SaslMechanism.ScramSha512;
+                                                information.SecurityProtocol = SecurityProtocol.SaslPlaintext;
+                                                information.SaslUsername = kafkaSettings.Username;
+                                                information.SaslPassword = kafkaSettings.Password;
                                             }
                                     )
-                                    .AddProducers(provider.GetServices<IKafkaProducer>(), callingAssemblyName, kafkaSettings.ProducerSettings)
-                                    .AddConsumers(provider.GetServices<IKafkaConsumer>(), callingAssemblyName);
+                                    .AddProducers(callingAssemblyName, provider.GetServices<IKafkaProducer>())
+                                    .AddConsumers(callingAssemblyName, provider.GetServices<IKafkaConsumer>());
                             }
                     )
             );

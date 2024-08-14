@@ -1,30 +1,23 @@
 ﻿namespace Byndyusoft.Net.Kafka
 {
-    using KafkaFlow.Configuration;
-
     /// <summary>
-    ///     Settings to connection with Kafka
+    /// Settings to connection with Kafka
     /// </summary>
     public class KafkaSettings
     {
-        public KafkaSettings()
-        {
-            ProducerSettings = new KafkaProducerSettings();
-        }
-
         /// <summary>
-        ///     Available hosts
+        /// Available hosts
         /// </summary>
         public string[] Hosts { get; set; } = default!;
 
         /// <summary>
-        ///     Represent the Kafka producer settings
+        /// Connection user name
         /// </summary>
-        public KafkaProducerSettings ProducerSettings { get; set; }
+        public string Username { get; set; }
 
         /// <summary>
-        ///     Represent the Kafka security information
+        /// Connection password
         /// </summary>
-        public SecurityInformation? SecurityInformation { get; set; }
+        public string Password { get; set; }
     }
 }

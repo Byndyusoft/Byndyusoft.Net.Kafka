@@ -14,23 +14,18 @@
         }
 
         public void Error(string message, Exception ex, object data)
-        {
-            _logger.LogError(ex, message, data);
-        }
+            => _logger.LogError(ex, message, data);
 
         public void Warning(string message, object data)
-        {
-            _logger.LogWarning(message, data);
-        }
+            => _logger.LogWarning(message, data);
+
+        public void Warning(string message, Exception ex, object data)
+            => _logger.LogWarning(ex, message, data);
 
         public void Info(string message, object data)
-        {
-            _logger.LogInformation(message, data);
-        }
+            => _logger.LogInformation(message, data);
 
         public void Verbose(string message, object data)
-        {
-            _logger.LogDebug(message, data);
-        }
+            => _logger.LogDebug(message, data);
     }
 }

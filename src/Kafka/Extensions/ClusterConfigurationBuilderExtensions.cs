@@ -7,19 +7,30 @@
     using KafkaFlow.Configuration;
     using KafkaFlow.Retry;
     using KafkaFlow.Serializer;
-    using KafkaFlow.TypedHandler;
     using Middlewares;
-    using Newtonsoft.Json;
     using Acks = Confluent.Kafka.Acks;
     using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
 
     internal static class ClusterConfigurationBuilderExtensions
     {
+        private const int MessageMaxSizeBytes = 40 * 1024 * 1024;
+
+        private static ProducerConfig CreateProducerConfig(string solutionName, IKafkaProducer producer)
+            => new()
+            {
+                ClientId = producer.BuildClientId(solutionName),
+                Acks = Acks.All,
+                EnableIdempotence = true,
+                MaxInFlight = 1,
+                MessageMaxBytes = MessageMaxSizeBytes,
+                RetryBackoffMs = (int) TimeSpan.FromSeconds(1).TotalMilliseconds,
+                CompressionType = CompressionType.Zstd
+            };
+
         public static IClusterConfigurationBuilder AddProducers(
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
-            IEnumerable<IKafkaProducer> producers,
-            string prefix,
-            KafkaProducerSettings settings
+            string solutionName,
+            IEnumerable<IKafkaProducer> producers
         )
         {
             foreach (var producer in producers)
@@ -27,14 +38,12 @@
                     producer.Title,
                     producerConfigurationBuilder => producerConfigurationBuilder
                         .DefaultTopic(producer.Topic)
-                        .WithProducerConfig(CreateProducerConfig(producer, prefix, settings))
+                        .WithProducerConfig(CreateProducerConfig(solutionName, producer))
                         .AddMiddlewares(
-                            middlewares => middlewares
-                                .Add<PublishMessageTracingMiddleware>()
-                                .Add<ErrorHandlingMiddleware>()
-                                .AddSerializer(
-                                    _ => new NewtonsoftJsonSerializer(new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.Auto})
-                                )
+                            pipeline => pipeline
+                                .Add<ErrorsLoggingMiddleware>()
+                                .AddSerializer(_ => new NewtonsoftJsonSerializer(JsonSerializerSettingsExtensions.DefaultSettings))
+                                .Add<ProducedMessageLoggingMiddleware>()
                         )
                 );
 
@@ -43,56 +52,34 @@
 
         public static IClusterConfigurationBuilder AddConsumers(
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
-            IEnumerable<IKafkaConsumer> consumers,
-            string prefix
+            string solutionName,
+            IEnumerable<IKafkaConsumer> consumers
         )
         {
             foreach (var consumer in consumers)
                 clusterConfigurationBuilder.AddConsumer(
                     consumerConfigurationBuilder => consumerConfigurationBuilder
                         .Topic(consumer.Topic)
-                        .WithGroupId(consumer.BuildConsumersGroupId(prefix))
+                        .WithGroupId(consumer.BuildConsumersGroupId(solutionName))
                         .WithBufferSize(100)
                         .WithWorkersCount(10)
                         .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+                        .WithConsumerConfig(new ConsumerConfig {MaxPartitionFetchBytes = MessageMaxSizeBytes})
                         .AddMiddlewares(
-                            middlewares =>
-                                middlewares
-                                    .Add<ConsumeMessageTracingMiddleware>()
-                                    .Add<ErrorHandlingMiddleware>()
-                                    .AddSerializer(
-                                        _ => new NewtonsoftJsonSerializer(
-                                            new JsonSerializerSettings {TypeNameHandling = TypeNameHandling.Auto}
-                                        )
-                                    )
-                                    .AddTypedHandlers(h => h.AddHandlers(new[] {consumer.MessageHandler.GetType()}))
-                                    .RetrySimple(
-                                        config => config
-                                            .TryTimes(3)
-                                            .WithTimeBetweenTriesPlan(retryNumber => TimeSpan.FromSeconds(Math.Pow(2, retryNumber)))
-                                    )
+                            pipeline => pipeline
+                                .Add<ErrorsLoggingMiddleware>()
+                                .Add<ConsumedMessageLoggingMiddleware>()
+                                .AddDeserializer(x => new NewtonsoftJsonDeserializer(JsonSerializerSettingsExtensions.DefaultSettings))
+                                .AddTypedHandlers(h => h.AddHandlers(new[] {consumer.MessageHandler.GetType()}))
+                                .RetrySimple(
+                                    config => config
+                                        .TryTimes(3)
+                                        .WithTimeBetweenTriesPlan(retryNumber => TimeSpan.FromSeconds(Math.Pow(2, retryNumber)))
+                                )
                         )
                 );
 
             return clusterConfigurationBuilder;
-        }
-
-        private static ProducerConfig CreateProducerConfig(
-            IKafkaProducer producer,
-            string prefix,
-            KafkaProducerSettings settings
-        )
-        {
-            return new ProducerConfig
-            {
-                ClientId = producer.BuildClientId(prefix),
-                Acks = Acks.All,
-                EnableIdempotence = true,
-                MaxInFlight = 1,
-                MessageSendMaxRetries = settings.MessageSendMaxRetries,
-                MessageMaxBytes = settings.MessageMaxBytes,
-                RetryBackoffMs = settings.RetryBackoffMs
-            };
         }
     }
 }

@@ -2,9 +2,8 @@
 {
     using System;
     using System.Threading.Tasks;
-    using KafkaFlow;
-    using KafkaFlow.TypedHandler;
     using Microsoft.Extensions.Logging;
+    using KafkaFlow;
     using Contracts;
 
     public sealed class EntityCreationMessageHandler : IMessageHandler<EntityCreation>

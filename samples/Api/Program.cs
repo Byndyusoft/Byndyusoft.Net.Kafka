@@ -1,8 +1,11 @@
 namespace MusicalityLabs.Storage.Api
 {
-    using Byndyusoft.Tracing;
+    using Byndyusoft.Logging.Builders;
+    using Byndyusoft.Logging.Configuration;
+    using Infrastructure.OpenTelemetry;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
+    using Serilog;
 
     public class Program
     {
@@ -13,18 +16,17 @@ namespace MusicalityLabs.Storage.Api
 
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return Host
-                .CreateDefaultBuilder(args)
-                .ConfigureServices(
-                    (context, services) =>
-                        services.AddOpenTracingServices(
-                                options => options
-                                    .AddDefaultIgnorePatterns()
-                                    .WithDefaultOperationNameResolver()
-                            )
-                            .AddJaegerTracer(context.Configuration)
+            var serviceName = typeof(Program).Assembly.GetName().Name!;
+
+            return Host.CreateDefaultBuilder(args)
+                .UseSerilog(
+                    (context, configuration) => configuration
+                        .UseDefaultSettings(context.Configuration)
+                        .UseOpenTelemetryTraces()
+                        .WriteToOpenTelemetry(activityEventBuilder: StructuredActivityEventBuilder.Instance)
                 )
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureServices((context, services) => services.AddOpenTelemetry(serviceName, context.Configuration))
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
         }
     }
 }
