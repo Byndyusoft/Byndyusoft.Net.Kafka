@@ -19,13 +19,13 @@ namespace MusicalityLabs.Storage.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddKafkaBus(_configuration);
-
-            services
+           services
                 .AddControllers()
                 .AddTracing();
 
             services.AddSwaggerGen();
+
+            services.AddKafkaBus(_configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment webHostEnvironment, IHostApplicationLifetime lifetime)

@@ -33,10 +33,10 @@
             var assemblies = callingAssembly.LoadReferencedAssemblies().ToArray();
             return services
                 .AddKafkaOptions(configuration)
-                .AddKafka(configuration, callingAssembly)
                 .AddProducerServices(assemblies)
                 .AddMessageHandles(assemblies)
-                .AddConsumerServices(assemblies);
+                .AddConsumerServices(assemblies)
+                .AddKafka(configuration, callingAssembly);
         }
 
         private static IServiceCollection AddKafka(

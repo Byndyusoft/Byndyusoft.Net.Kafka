@@ -69,7 +69,7 @@
                             pipeline => pipeline
                                 .Add<ErrorsLoggingMiddleware>()
                                 .Add<ConsumedMessageLoggingMiddleware>()
-                                .AddDeserializer(x => new NewtonsoftJsonDeserializer(JsonSerializerSettingsExtensions.DefaultSettings))
+                                .AddDeserializer(_ => new NewtonsoftJsonDeserializer(JsonSerializerSettingsExtensions.DefaultSettings))
                                 .AddTypedHandlers(h => h.AddHandlers(new[] {consumer.MessageHandler.GetType()}))
                                 .RetrySimple(
                                     config => config
