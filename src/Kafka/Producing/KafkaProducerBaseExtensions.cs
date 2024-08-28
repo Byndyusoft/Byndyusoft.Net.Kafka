@@ -1,4 +1,4 @@
-﻿namespace Byndyusoft.Net.Kafka.Extensions
+﻿namespace Byndyusoft.Net.Kafka.Producing
 {
     using System.Linq;
     using CaseExtensions;

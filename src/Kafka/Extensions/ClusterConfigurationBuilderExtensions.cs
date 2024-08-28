@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Producing;
     using Confluent.Kafka;
     using KafkaFlow;
     using KafkaFlow.Configuration;

@@ -1,8 +1,8 @@
 ﻿namespace MusicalityLabs.Storage.Api.Producers
 {
-    using Byndyusoft.Net.Kafka;
     using KafkaFlow.Producers;
     using Contracts;
+    using Byndyusoft.Net.Kafka.Producing;
 
     public class EntityCreationEventsProducer : KafkaProducerBase<EntityCreation>
     {
