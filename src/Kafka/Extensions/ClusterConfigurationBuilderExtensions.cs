@@ -39,7 +39,7 @@
                 clusterConfigurationBuilder.AddProducer(
                     producerType.GetTitle(),
                     producerConfigurationBuilder => producerConfigurationBuilder
-                        .DefaultTopic(producerType.GetTopic())
+                        .DefaultTopic(KafkaProducerTypeExtensions.GetTopic(producerType))
                         .WithProducerConfig(CreateProducerConfig(solutionName, producerType))
                         .AddMiddlewares(
                             pipeline => pipeline
@@ -55,14 +55,14 @@
         public static IClusterConfigurationBuilder AddConsumers(
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
             string solutionName,
-            IEnumerable<IKafkaConsumer> consumers
+            IEnumerable<Type> messageHandlerTypes
         )
         {
-            foreach (var consumer in consumers)
+            foreach (var messageHandlerType in messageHandlerTypes)
                 clusterConfigurationBuilder.AddConsumer(
                     consumerConfigurationBuilder => consumerConfigurationBuilder
-                        .Topic(consumer.Topic)
-                        .WithGroupId(consumer.BuildConsumersGroupId(solutionName))
+                        .Topic(KafkaMessageHandlerTypeExtensions.GetTopic(messageHandlerType))
+                        .WithGroupId(messageHandlerType.BuildConsumersGroupId(solutionName))
                         .WithBufferSize(100)
                         .WithWorkersCount(10)
                         .WithAutoOffsetReset(AutoOffsetReset.Earliest)
@@ -72,7 +72,7 @@
                                 .Add<ErrorsLoggingMiddleware>()
                                 .Add<ConsumedMessageLoggingMiddleware>()
                                 .AddDeserializer(_ => new NewtonsoftJsonDeserializer(JsonSerializerSettingsExtensions.DefaultSettings))
-                                .AddTypedHandlers(h => h.AddHandlers(new[] {consumer.MessageHandler.GetType()}))
+                                .AddTypedHandlers(h => h.AddHandlers(new[] {messageHandlerType}))
                                 .RetrySimple(
                                     config => config
                                         .TryTimes(3)

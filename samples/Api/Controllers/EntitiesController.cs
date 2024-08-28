@@ -4,15 +4,15 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Contracts;
-    using Producers;
+    using MessageProducers;
 
     [ApiController]
     [Route("[controller]")]
     public class EntitiesController : ControllerBase
     {
-        private readonly EntityCreationEventsProducer _exampleProducer;
+        private readonly EntityCreationEventMessageProducer _exampleProducer;
 
-        public EntitiesController(EntityCreationEventsProducer exampleProducer)
+        public EntitiesController(EntityCreationEventMessageProducer exampleProducer)
         {
             _exampleProducer = exampleProducer;
         }

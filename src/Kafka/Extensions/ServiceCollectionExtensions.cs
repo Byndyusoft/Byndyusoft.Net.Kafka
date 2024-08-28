@@ -36,18 +36,17 @@
                 .ToArray();
         }
 
-        private static IServiceCollection AddMessageHandles(
-            this IServiceCollection services,
-            IEnumerable<Assembly> assemblies
-        )
+        private static Type[] GetMessageHandlerTypes(IEnumerable<Assembly> assemblies)
         {
-            var messageHandlerTypes = assemblies
-                .SelectMany(assembly => assembly.GetTypesAssignableFrom<IMessageHandler>())
+            var requiredBaseType = typeof(KafkaMessageHandlerBase<>);
+            return assemblies
+                .SelectMany(
+                    assembly => assembly.GetTypes()
+                        .Where(type => type is { IsPublic: true, IsClass: true, IsAbstract: false, IsGenericType: false })
+                        .Where(type => type.GetMessageType(requiredBaseType) != null)
+                        .Where(type => type.GetCustomAttribute<KafkaMessageHandlerAttribute>(false) != null)
+                )
                 .ToArray();
-            foreach (var messageHandlerType in messageHandlerTypes)
-                services.AddSingleton(messageHandlerType);
-
-            return services;
         }
 
         private static IServiceCollection AddProducers(
@@ -67,20 +66,16 @@
             return services;
         }
 
-        private static IServiceCollection AddConsumerServices(
+        private static IServiceCollection AddMessageHandlers(
             this IServiceCollection services,
-            IEnumerable<Assembly> assemblies
+            IEnumerable<Type> messageHandlerTypes
         )
         {
-            var baseType = typeof(IKafkaConsumer);
-            var consumerTypes = assemblies
-                .SelectMany(assembly => assembly.GetTypesAssignableFrom<IKafkaConsumer>())
-                .ToArray();
-            foreach (var consumerType in consumerTypes)
-            {
-                services.AddSingleton(consumerType);
-                services.AddSingleton(baseType, consumerType);
-            }
+            var messageHandlersMarkerInterfaceType = typeof(IKafkaMessageHandler);
+            foreach (var messageHandlerType in messageHandlerTypes)
+                services
+                    .AddSingleton(messageHandlerType)
+                    .AddSingleton(messageHandlersMarkerInterfaceType, messageHandlerType);
 
             return services;
         }
@@ -93,24 +88,17 @@
             IConfiguration configuration
         )
         {
+            var kafkaSettings = configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>();
+
             var callingAssembly = Assembly.GetCallingAssembly();
+            var callingAssemblyName = callingAssembly.GetName().Name!;
+
             var assemblies = callingAssembly.LoadReferencedAssemblies().ToArray();
             var producerTypes = GetProducerTypes(assemblies);
-
-            services
-                .AddOptions()
-                .Configure<KafkaSettings>(configuration.GetSection(nameof(KafkaSettings)));
-            
-            services
-                .AddKafka(kafka => kafka.UseLogHandler<LoggerHandler>())
-                .AddMessageHandles(assemblies)
-                .AddConsumerServices(assemblies);
-
-            var provider = services.BuildServiceProvider();
-            var callingAssemblyName = callingAssembly.GetName().Name!;
-            var kafkaSettings = configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>();
+            var messageHandlerTypes = GetMessageHandlerTypes(assemblies);
             return services
                 .AddProducers(producerTypes)
+                .AddMessageHandlers(messageHandlerTypes)
                 .AddKafka(
                     kafka => kafka
                         .UseLogHandler<LoggerHandler>()
@@ -130,7 +118,7 @@
                                                 }
                                         )
                                         .AddProducers(callingAssemblyName, producerTypes)
-                                        .AddConsumers(callingAssemblyName, provider.GetServices<IKafkaConsumer>());
+                                        .AddConsumers(callingAssemblyName, messageHandlerTypes);
                                 }
                         )
                 );

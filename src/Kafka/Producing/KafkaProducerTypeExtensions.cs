@@ -5,7 +5,7 @@
     using System.Reflection;
     using CaseExtensions;
 
-    internal static class ProducerTypeExtensions
+    internal static class KafkaProducerTypeExtensions
     {
         public static string GetTitle(this Type producerType) => producerType.FullName.ToSnakeCase();
 
