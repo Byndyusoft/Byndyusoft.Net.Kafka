@@ -1,6 +1,7 @@
 ﻿namespace Byndyusoft.Net.Kafka.Consuming
 {
     using System.Threading.Tasks;
+    using Abstractions.Consuming;
     using KafkaFlow;
 
     public abstract class KafkaMessageHandlerBase<TMessage> : IMessageHandler<TMessage>, IKafkaMessageHandler

@@ -12,6 +12,8 @@
     using KafkaFlow.Serializer;
     using Acks = Confluent.Kafka.Acks;
     using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
+    using KafkaMessageProducerTypeExtensions = Abstractions.Producing.KafkaMessageProducerTypeExtensions;
+    using KafkaMessageHandlerTypeExtensions = Abstractions.Consuming.KafkaMessageHandlerTypeExtensions;
 
     internal static class ClusterConfigurationBuilderExtensions
     {

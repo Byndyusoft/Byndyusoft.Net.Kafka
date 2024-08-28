@@ -1,4 +1,4 @@
-﻿namespace Byndyusoft.Net.Kafka.Producing
+﻿namespace Byndyusoft.Net.Kafka.Abstractions.Producing
 {
     using System.Threading.Tasks;
 

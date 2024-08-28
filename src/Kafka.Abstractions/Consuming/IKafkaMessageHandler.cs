@@ -1,4 +1,4 @@
-﻿namespace Byndyusoft.Net.Kafka.Consuming
+﻿namespace Byndyusoft.Net.Kafka.Abstractions.Consuming
 {
     /// <summary>
     /// Message handler marker interface

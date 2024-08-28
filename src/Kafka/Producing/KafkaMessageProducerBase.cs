@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Abstractions.Producing;
     using KafkaFlow.Producers;
 
     /// <summary>

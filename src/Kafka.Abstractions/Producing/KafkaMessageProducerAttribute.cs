@@ -1,13 +1,13 @@
-﻿namespace Byndyusoft.Net.Kafka.Consuming
+﻿namespace Byndyusoft.Net.Kafka.Abstractions.Producing
 {
     using System;
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class KafkaMessageHandlerAttribute : Attribute
+    public class KafkaMessageProducerAttribute : Attribute 
     {
         public string Topic { get; }
 
-        public KafkaMessageHandlerAttribute(string topic)
+        public KafkaMessageProducerAttribute(string topic)
         {
             Topic = topic ?? throw new ArgumentNullException(nameof(topic));
         }

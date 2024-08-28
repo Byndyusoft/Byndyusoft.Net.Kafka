@@ -1,8 +1,9 @@
 ﻿namespace MusicalityLabs.Storage.Api.MessageProducers
 {
+    using Byndyusoft.Net.Kafka.Abstractions.Producing;
     using Byndyusoft.Net.Kafka.Producing;
     using KafkaFlow.Producers;
-    using MusicalityLabs.Storage.Api.Contracts;
+    using Contracts;
 
     [KafkaMessageProducer("project.entity.creation")]
     public class EntityCreationEventMessageProducer : KafkaMessageProducerBase<EntityCreation>

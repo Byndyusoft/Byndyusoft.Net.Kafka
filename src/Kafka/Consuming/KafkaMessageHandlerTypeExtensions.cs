@@ -2,14 +2,11 @@
 {
     using System;
     using System.Linq;
-    using System.Reflection;
+    using Abstractions.Consuming;
     using CaseExtensions;
 
     internal static class KafkaMessageHandlerTypeExtensions
     {
-        public static string GetTopic(this Type messageHandlerType)
-            => messageHandlerType.GetCustomAttribute<KafkaMessageHandlerAttribute>(false)!.Topic;
-
         public static string BuildConsumersGroupId(this Type messageHandlerType, string solutionName)
         {
             var solutionNameParts = solutionName.Split('.').ToArray();

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Byndyusoft.Net.Kafka.Abstractions.Consuming;
     using Microsoft.Extensions.Logging;
     using Contracts;
     using Byndyusoft.Net.Kafka.Consuming;
