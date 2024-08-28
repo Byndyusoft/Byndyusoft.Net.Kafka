@@ -11,7 +11,6 @@
     using Producing;
     using KafkaFlow;
     using KafkaFlow.Configuration;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class ServiceCollectionExtensions
@@ -49,10 +48,7 @@
                 .ToArray();
         }
 
-        private static IServiceCollection AddMessageProducers(
-            this IServiceCollection services,
-            IEnumerable<Type> producerTypes
-        )
+        private static IServiceCollection AddMessageProducers(this IServiceCollection services, IEnumerable<Type> producerTypes)
         {
             var producersMarkerInterfaceType = typeof(IKafkaMessageProducer);
             var producerInterfaceType = typeof(IKafkaMessageProducer<>);
@@ -66,10 +62,7 @@
             return services;
         }
 
-        private static IServiceCollection AddMessageHandlers(
-            this IServiceCollection services,
-            IEnumerable<Type> messageHandlerTypes
-        )
+        private static IServiceCollection AddMessageHandlers(this IServiceCollection services, IEnumerable<Type> messageHandlerTypes)
         {
             var messageHandlersMarkerInterfaceType = typeof(IKafkaMessageHandler);
             foreach (var messageHandlerType in messageHandlerTypes)
@@ -83,13 +76,8 @@
         /// <summary>
         /// Register Kafka in DI
         /// </summary>
-        public static IServiceCollection AddKafkaBus(
-            this IServiceCollection services,
-            IConfiguration configuration
-        )
+        public static IServiceCollection AddKafkaBus(this IServiceCollection services, KafkaSettings kafkaSettings)
         {
-            var kafkaSettings = configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>();
-
             var callingAssembly = Assembly.GetCallingAssembly();
             var callingAssemblyName = callingAssembly.GetName().Name!;
 

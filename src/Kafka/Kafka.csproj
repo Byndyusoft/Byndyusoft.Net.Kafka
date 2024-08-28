@@ -7,11 +7,9 @@
 		<PackageReference Include="KafkaFlow.OpenTelemetry" Version="3.0.8" />
 		<PackageReference Include="KafkaFlow.Retry.API" Version="3.0.1" />
 		<PackageReference Include="KafkaFlow.Serializer.NewtonsoftJson" Version="3.0.8" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

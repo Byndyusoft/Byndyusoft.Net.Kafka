@@ -1,6 +1,7 @@
 namespace MusicalityLabs.Storage.Api
 {
     using System;
+    using Byndyusoft.Net.Kafka;
     using Byndyusoft.Net.Kafka.Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -21,11 +22,10 @@ namespace MusicalityLabs.Storage.Api
         {
            services
                 .AddControllers()
-                .AddTracing();
-
+            .AddTracing();
             services.AddSwaggerGen();
 
-            services.AddKafkaBus(_configuration);
+            services.AddKafkaBus(_configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment webHostEnvironment, IHostApplicationLifetime lifetime)
