@@ -1,8 +1,9 @@
 ﻿namespace MusicalityLabs.Storage.Api.Consumers
 {
     using KafkaFlow;
-    using Byndyusoft.Net.Kafka;
     using MessageHandlers;
+    using Byndyusoft.Net.Kafka.Consuming;
+
     public sealed class EntityCreationEventsConsumer : IKafkaConsumer
     {
         public EntityCreationEventsConsumer(EntityCreationMessageHandler messageHandler)

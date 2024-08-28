@@ -1,4 +1,4 @@
-﻿namespace Byndyusoft.Net.Kafka
+﻿namespace Byndyusoft.Net.Kafka.Consuming
 {
     using KafkaFlow;
 
