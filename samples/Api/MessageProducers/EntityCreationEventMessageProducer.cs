@@ -4,8 +4,8 @@
     using KafkaFlow.Producers;
     using MusicalityLabs.Storage.Api.Contracts;
 
-    [KafkaProducer("project.entity.creation")]
-    public class EntityCreationEventMessageProducer : KafkaProducerBase<EntityCreation>
+    [KafkaMessageProducer("project.entity.creation")]
+    public class EntityCreationEventMessageProducer : KafkaMessageProducerBase<EntityCreation>
     {
         public EntityCreationEventMessageProducer(IProducerAccessor producers) : base(producers)
         {

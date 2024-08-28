@@ -23,40 +23,38 @@
             return null;
         }
 
-        private static Type[] GetProducerTypes(IEnumerable<Assembly> assemblies)
+        private static IEnumerable<Type> GetServiceTypes(this Assembly assembly, Type requiredBaseType, Type requiredAttributeType)
+            => assembly.GetTypes()
+                .Where(type => type is {IsPublic: true, IsClass: true, IsAbstract: false, IsGenericType: false})
+                .Where(type => type.GetMessageType(requiredBaseType) != null)
+                .Where(type => type.GetCustomAttribute(requiredAttributeType, false) != null);
+
+        private static Type[] GetMessageProducerTypes(IEnumerable<Assembly> assemblies)
         {
-            var requiredBaseType = typeof(KafkaProducerBase<>);
+            var requiredBaseType = typeof(KafkaMessageProducerBase<>);
+            var requiredAttributeType = typeof(KafkaMessageProducerAttribute);
             return assemblies
-                .SelectMany(
-                    assembly => assembly.GetTypes()
-                        .Where(type => type is {IsPublic: true, IsClass: true, IsAbstract: false, IsGenericType: false})
-                        .Where(type => type.GetMessageType(requiredBaseType) != null)
-                        .Where(type => type.GetCustomAttribute<KafkaProducerAttribute>(false) != null)
-                )
+                .SelectMany(assembly => assembly.GetServiceTypes(requiredBaseType, requiredAttributeType))
                 .ToArray();
         }
 
         private static Type[] GetMessageHandlerTypes(IEnumerable<Assembly> assemblies)
         {
             var requiredBaseType = typeof(KafkaMessageHandlerBase<>);
+            var requiredAttributeType = typeof(KafkaMessageHandlerAttribute);
             return assemblies
-                .SelectMany(
-                    assembly => assembly.GetTypes()
-                        .Where(type => type is { IsPublic: true, IsClass: true, IsAbstract: false, IsGenericType: false })
-                        .Where(type => type.GetMessageType(requiredBaseType) != null)
-                        .Where(type => type.GetCustomAttribute<KafkaMessageHandlerAttribute>(false) != null)
-                )
+                .SelectMany(assembly => assembly.GetServiceTypes(requiredBaseType, requiredAttributeType))
                 .ToArray();
         }
 
-        private static IServiceCollection AddProducers(
+        private static IServiceCollection AddMessageProducers(
             this IServiceCollection services,
             IEnumerable<Type> producerTypes
         )
         {
-            var producersMarkerInterfaceType = typeof(IKafkaProducer);
-            var producerInterfaceType = typeof(IKafkaProducer<>);
-            var producerBaseType = typeof(KafkaProducerBase<>);
+            var producersMarkerInterfaceType = typeof(IKafkaMessageProducer);
+            var producerInterfaceType = typeof(IKafkaMessageProducer<>);
+            var producerBaseType = typeof(KafkaMessageProducerBase<>);
             foreach (var producerType in producerTypes)
                 services
                     .AddSingleton(producerType)
@@ -94,10 +92,10 @@
             var callingAssemblyName = callingAssembly.GetName().Name!;
 
             var assemblies = callingAssembly.LoadReferencedAssemblies().ToArray();
-            var producerTypes = GetProducerTypes(assemblies);
+            var producerTypes = GetMessageProducerTypes(assemblies);
             var messageHandlerTypes = GetMessageHandlerTypes(assemblies);
             return services
-                .AddProducers(producerTypes)
+                .AddMessageProducers(producerTypes)
                 .AddMessageHandlers(messageHandlerTypes)
                 .AddKafka(
                     kafka => kafka

@@ -1,17 +1,17 @@
 ﻿namespace Byndyusoft.Net.Kafka.Extensions
 {
-    using System;
-    using System.Collections.Generic;
-    using Producing;
     using Confluent.Kafka;
+    using Consuming;
     using KafkaFlow;
     using KafkaFlow.Configuration;
     using KafkaFlow.Retry;
     using KafkaFlow.Serializer;
     using Middlewares;
+    using Producing;
+    using System;
+    using System.Collections.Generic;
     using Acks = Confluent.Kafka.Acks;
     using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
-    using Consuming;
 
     internal static class ClusterConfigurationBuilderExtensions
     {
@@ -39,7 +39,7 @@
                 clusterConfigurationBuilder.AddProducer(
                     producerType.GetTitle(),
                     producerConfigurationBuilder => producerConfigurationBuilder
-                        .DefaultTopic(KafkaProducerTypeExtensions.GetTopic(producerType))
+                        .DefaultTopic(KafkaMessageProducerTypeExtensions.GetTopic(producerType))
                         .WithProducerConfig(CreateProducerConfig(solutionName, producerType))
                         .AddMiddlewares(
                             pipeline => pipeline

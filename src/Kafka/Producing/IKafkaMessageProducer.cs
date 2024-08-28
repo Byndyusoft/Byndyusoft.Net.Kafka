@@ -5,7 +5,7 @@
     /// <summary>
     /// Kafka producer contract
     /// </summary>
-    public interface IKafkaProducer<in TMessage> : IKafkaProducer
+    public interface IKafkaMessageProducer<in TMessage> : IKafkaMessageProducer
     {
         /// <summary>
         /// Produces message to Kafka
@@ -16,7 +16,7 @@
     /// <summary>
     /// Producers marker interface
     /// </summary>
-    public interface IKafkaProducer
+    public interface IKafkaMessageProducer
     {
     }
 }

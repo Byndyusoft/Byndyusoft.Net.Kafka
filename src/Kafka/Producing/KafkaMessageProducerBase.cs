@@ -7,12 +7,12 @@
     /// <summary>
     /// Produce <typeparamref name="TMessage"/> messages to Kafka
     /// </summary>
-    public abstract class KafkaProducerBase<TMessage> : IKafkaProducer<TMessage>
+    public abstract class KafkaMessageProducerBase<TMessage> : IKafkaMessageProducer<TMessage>
     {
         private readonly string _title;
         private readonly IProducerAccessor _producers;
 
-        protected KafkaProducerBase(IProducerAccessor producers)
+        protected KafkaMessageProducerBase(IProducerAccessor producers)
         {
             _title = GetType().GetTitle();
             _producers = producers ?? throw new ArgumentNullException(nameof(producers));

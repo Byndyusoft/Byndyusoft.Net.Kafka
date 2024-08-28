@@ -5,11 +5,11 @@
     using System.Reflection;
     using CaseExtensions;
 
-    internal static class KafkaProducerTypeExtensions
+    internal static class KafkaMessageProducerTypeExtensions
     {
         public static string GetTitle(this Type producerType) => producerType.FullName.ToSnakeCase();
 
-        public static string GetTopic(this Type producerType) => producerType.GetCustomAttribute<KafkaProducerAttribute>(false)!.Topic;
+        public static string GetTopic(this Type producerType) => producerType.GetCustomAttribute<KafkaMessageProducerAttribute>(false)!.Topic;
 
         public static string BuildClientId(this Type producerType, string solutionName)
         {
