@@ -3,34 +3,13 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     Produce messages to kafka
+    ///  Produce messages to Kafka
     /// </summary>
-    public interface IKafkaProducer
+    public interface IKafkaProducer<in TMessage>
     {
         /// <summary>
-        ///     Kafka title name
+        /// Push message to queue
         /// </summary>
-        public string Title { get; }
-
-        /// <summary>
-        ///     Kafka topic name
-        /// </summary>
-        public string Topic { get; }
-    }
-
-    /// <summary>
-    ///     Produce T messages to kafka
-    /// </summary>
-    public interface IKafkaProducer<in T> : IKafkaProducer
-    {
-        /// <summary>
-        ///     Generate key
-        /// </summary>
-        public string KeyGenerator(T message);
-
-        /// <summary>
-        ///     Push message to queue
-        /// </summary>
-        public Task ProduceAsync(T message);
+        public Task ProduceAsync(TMessage message);
     }
 }

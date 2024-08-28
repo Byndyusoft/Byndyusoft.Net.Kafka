@@ -4,18 +4,14 @@
     using Contracts;
     using Byndyusoft.Net.Kafka.Producing;
 
+    [KafkaProducer("project.entity.creation")]
     public class EntityCreationEventsProducer : KafkaProducerBase<EntityCreation>
     {
-        public EntityCreationEventsProducer(IProducerAccessor producers)
-            : base(producers, nameof(EntityCreationEventsProducer))
+        public EntityCreationEventsProducer(IProducerAccessor producers) : base(producers)
         {
         }
 
-        public override string Topic => "project.entity.creation";
-
-        public override string KeyGenerator(EntityCreation entityCreation)
-        {
-            return entityCreation.Id.ToString();
-        }
+        protected override string KeyGenerator(EntityCreation entityCreation)
+            => entityCreation.Id.ToString();
     }
 }

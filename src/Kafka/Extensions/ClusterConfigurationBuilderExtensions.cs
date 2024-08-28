@@ -16,10 +16,10 @@
     {
         private const int MessageMaxSizeBytes = 40 * 1024 * 1024;
 
-        private static ProducerConfig CreateProducerConfig(string solutionName, IKafkaProducer producer)
+        private static ProducerConfig CreateProducerConfig(string solutionName, Type producerType)
             => new()
             {
-                ClientId = producer.BuildClientId(solutionName),
+                ClientId = producerType.BuildClientId(solutionName),
                 Acks = Acks.All,
                 EnableIdempotence = true,
                 MaxInFlight = 1,
@@ -31,15 +31,15 @@
         public static IClusterConfigurationBuilder AddProducers(
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
             string solutionName,
-            IEnumerable<IKafkaProducer> producers
+            IEnumerable<Type> producerTypes
         )
         {
-            foreach (var producer in producers)
+            foreach (var producerType in producerTypes)
                 clusterConfigurationBuilder.AddProducer(
-                    producer.Title,
+                    producerType.GetTitle(),
                     producerConfigurationBuilder => producerConfigurationBuilder
-                        .DefaultTopic(producer.Topic)
-                        .WithProducerConfig(CreateProducerConfig(solutionName, producer))
+                        .DefaultTopic(producerType.GetTopic())
+                        .WithProducerConfig(CreateProducerConfig(solutionName, producerType))
                         .AddMiddlewares(
                             pipeline => pipeline
                                 .Add<ErrorsLoggingMiddleware>()

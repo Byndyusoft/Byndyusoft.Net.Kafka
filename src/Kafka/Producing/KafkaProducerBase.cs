@@ -2,29 +2,30 @@
 {
     using System;
     using System.Threading.Tasks;
-    using CaseExtensions;
     using KafkaFlow.Producers;
 
     /// <summary>
-    ///     Produce T messages to kafka
+    /// Produce <typeparamref name="TMessage"/> messages to Kafka
     /// </summary>
-    public abstract class KafkaProducerBase<T> : IKafkaProducer<T>
+    public abstract class KafkaProducerBase<TMessage> : IKafkaProducer<TMessage>
     {
+        private readonly string _title;
         private readonly IProducerAccessor _producers;
 
-        protected KafkaProducerBase(IProducerAccessor producers, string title)
+        protected KafkaProducerBase(IProducerAccessor producers)
         {
+            _title = GetType().GetTitle();
             _producers = producers ?? throw new ArgumentNullException(nameof(producers));
-
-            if (string.IsNullOrEmpty(title))
-                throw new ArgumentNullException(nameof(title));
-            Title = title.ToSnakeCase();
         }
 
-        public string Title { get; }
-        public abstract string Topic { get; }
-        public abstract string KeyGenerator(T message);
+        /// <summary>
+        /// Generates key for each message
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <returns>Generated key</returns>
+        protected abstract string KeyGenerator(TMessage message);
 
-        public Task ProduceAsync(T message) => _producers[Title].ProduceAsync(KeyGenerator(message), message);
+        /// <inheritdoc />
+        public Task ProduceAsync(TMessage message) => _producers[_title].ProduceAsync(KeyGenerator(message), message);
     }
 }

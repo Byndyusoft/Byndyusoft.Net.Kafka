@@ -1,33 +1,38 @@
 ﻿namespace Byndyusoft.Net.Kafka.Extensions
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Byndyusoft.Net.Kafka.Producing;
     using Handlers;
     using KafkaFlow;
     using KafkaFlow.Configuration;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Producing;
 
     public static class ServiceCollectionExtensions
     {
-        private static IServiceCollection AddProducerServices(
-            this IServiceCollection services,
-            IEnumerable<Assembly> assemblies
-        )
+        private static Type? GetMessageType(this Type type, Type requiredBaseType)
         {
-            var baseType = typeof(IKafkaProducer);
-            var producerTypes = assemblies
-                .SelectMany(assembly => assembly.GetTypesAssignableFrom<IKafkaProducer>())
-                .ToArray();
-            foreach (var producerType in producerTypes)
-            {
-                services.AddSingleton(producerType);
-                services.AddSingleton(baseType, producerType);
-            }
+            for (var baseType = type; baseType != null; baseType = baseType.BaseType)
+                if (baseType.IsGenericType && baseType.GetGenericTypeDefinition() == requiredBaseType)
+                    return baseType.GetGenericArguments().Single();
 
-            return services;
+            return null;
+        }
+
+        private static Type[] GetProducerTypes(IEnumerable<Assembly> assemblies)
+        {
+            var requiredBaseType = typeof(KafkaProducerBase<>);
+            return assemblies
+                .SelectMany(
+                    assembly => assembly.GetTypes()
+                        .Where(type => type is {IsPublic: true, IsClass: true, IsAbstract: false, IsGenericType: false})
+                        .Where(type => type.GetMessageType(requiredBaseType) != null)
+                        .Where(type => type.GetCustomAttribute<KafkaProducerAttribute>(false) != null)
+                )
+                .ToArray();
         }
 
         private static IServiceCollection AddMessageHandles(
@@ -40,6 +45,25 @@
                 .ToArray();
             foreach (var messageHandlerType in messageHandlerTypes)
                 services.AddSingleton(messageHandlerType);
+
+            return services;
+        }
+
+        private static IServiceCollection AddProducers(
+            this IServiceCollection services,
+            IEnumerable<Type> producerTypes
+        )
+        {
+            var requiredBaseType = typeof(KafkaProducerBase<>);
+            var producerInterface = typeof(IKafkaProducer<>);
+            foreach (var producerType in producerTypes)
+            {
+                services.AddSingleton(producerType);
+                services.AddSingleton(
+                    producerInterface.MakeGenericType(producerType.GetMessageType(requiredBaseType)),
+                    producerType
+                );
+            }
 
             return services;
         }
@@ -70,44 +94,47 @@
             IConfiguration configuration
         )
         {
+            var callingAssembly = Assembly.GetCallingAssembly();
+            var assemblies = callingAssembly.LoadReferencedAssemblies().ToArray();
+            var producerTypes = GetProducerTypes(assemblies);
+
             services
                 .AddOptions()
                 .Configure<KafkaSettings>(configuration.GetSection(nameof(KafkaSettings)));
-
-            var callingAssembly = Assembly.GetCallingAssembly();
-            var assemblies = callingAssembly.LoadReferencedAssemblies().ToArray();
+            
             services
                 .AddKafka(kafka => kafka.UseLogHandler<LoggerHandler>())
-                .AddProducerServices(assemblies)
                 .AddMessageHandles(assemblies)
                 .AddConsumerServices(assemblies);
 
             var provider = services.BuildServiceProvider();
             var callingAssemblyName = callingAssembly.GetName().Name!;
             var kafkaSettings = configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>();
-            return services.AddKafka(
-                kafka => kafka
-                    .UseLogHandler<LoggerHandler>()
-                    .AddOpenTelemetryInstrumentation()
-                    .AddCluster(
-                        cluster =>
-                        {
-                            cluster
-                                .WithBrokers(kafkaSettings.Hosts)
-                                .WithSecurityInformation(
-                                    information =>
-                                    {
-                                        information.SaslMechanism = SaslMechanism.ScramSha512;
-                                        information.SecurityProtocol = SecurityProtocol.SaslPlaintext;
-                                        information.SaslUsername = kafkaSettings.Username;
-                                        information.SaslPassword = kafkaSettings.Password;
-                                    }
-                                )
-                                .AddProducers(callingAssemblyName, provider.GetServices<IKafkaProducer>())
-                                .AddConsumers(callingAssemblyName, provider.GetServices<IKafkaConsumer>());
-                        }
-                    )
-            );
+            return services
+                .AddProducers(producerTypes)
+                .AddKafka(
+                    kafka => kafka
+                        .UseLogHandler<LoggerHandler>()
+                        .AddOpenTelemetryInstrumentation()
+                        .AddCluster(
+                            cluster =>
+                                {
+                                    cluster
+                                        .WithBrokers(kafkaSettings.Hosts)
+                                        .WithSecurityInformation(
+                                            information =>
+                                                {
+                                                    information.SaslMechanism = SaslMechanism.ScramSha512;
+                                                    information.SecurityProtocol = SecurityProtocol.SaslPlaintext;
+                                                    information.SaslUsername = kafkaSettings.Username;
+                                                    information.SaslPassword = kafkaSettings.Password;
+                                                }
+                                        )
+                                        .AddProducers(callingAssemblyName, producerTypes)
+                                        .AddConsumers(callingAssemblyName, provider.GetServices<IKafkaConsumer>());
+                                }
+                        )
+                );
         }
     }
 }
