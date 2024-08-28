@@ -1,11 +1,11 @@
-﻿namespace Byndyusoft.Net.Kafka.Middlewares
+﻿namespace Byndyusoft.Net.Kafka.Logging
 {
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
     using KafkaFlow;
-    
+    using Microsoft.Extensions.Logging;
+
     internal class ErrorsLoggingMiddleware : IMessageMiddleware
     {
         private readonly ILogger<ErrorsLoggingMiddleware> _logger;

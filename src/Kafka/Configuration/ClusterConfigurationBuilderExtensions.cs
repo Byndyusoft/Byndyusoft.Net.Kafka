@@ -1,15 +1,15 @@
-﻿namespace Byndyusoft.Net.Kafka.Extensions
+﻿namespace Byndyusoft.Net.Kafka.Configuration
 {
-    using Confluent.Kafka;
+    using System;
+    using System.Collections.Generic;
     using Consuming;
+    using Logging;
+    using Producing;
+    using Confluent.Kafka;
     using KafkaFlow;
     using KafkaFlow.Configuration;
     using KafkaFlow.Retry;
     using KafkaFlow.Serializer;
-    using Middlewares;
-    using Producing;
-    using System;
-    using System.Collections.Generic;
     using Acks = Confluent.Kafka.Acks;
     using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
 

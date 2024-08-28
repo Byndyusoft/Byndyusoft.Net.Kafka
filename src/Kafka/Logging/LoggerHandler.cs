@@ -1,4 +1,4 @@
-﻿namespace Byndyusoft.Net.Kafka.Handlers
+﻿namespace Byndyusoft.Net.Kafka.Logging
 {
     using System;
     using KafkaFlow;

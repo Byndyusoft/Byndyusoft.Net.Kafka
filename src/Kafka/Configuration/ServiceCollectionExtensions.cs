@@ -1,16 +1,16 @@
-﻿namespace Byndyusoft.Net.Kafka.Extensions
+﻿namespace Byndyusoft.Net.Kafka.Configuration
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using Consuming;
-    using Handlers;
+    using Logging;
+    using Producing;
     using KafkaFlow;
     using KafkaFlow.Configuration;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Producing;
 
     public static class ServiceCollectionExtensions
     {

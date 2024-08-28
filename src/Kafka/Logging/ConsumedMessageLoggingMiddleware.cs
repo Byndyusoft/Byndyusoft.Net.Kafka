@@ -1,16 +1,16 @@
-﻿namespace Byndyusoft.Net.Kafka.Middlewares
+﻿namespace Byndyusoft.Net.Kafka.Logging
 {
     using System;
     using System.Text;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
     using KafkaFlow;
+    using Microsoft.Extensions.Logging;
 
-    internal class ProducedMessageLoggingMiddleware : IMessageMiddleware
+    public class ConsumedMessageLoggingMiddleware : IMessageMiddleware
     {
-        private readonly ILogger<ProducedMessageLoggingMiddleware> _logger;
+        private readonly ILogger<ConsumedMessageLoggingMiddleware> _logger;
 
-        public ProducedMessageLoggingMiddleware(ILogger<ProducedMessageLoggingMiddleware> logger)
+        public ConsumedMessageLoggingMiddleware(ILogger<ConsumedMessageLoggingMiddleware> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -19,7 +19,7 @@
         {
             _logger.LogInformation(
                 "{TraceEventName} Parameters: MessageBody = {MessageBody}",
-                "Producing message",
+                "Consuming message",
                 Encoding.UTF8.GetString((byte[])context.Message.Value)
             );
             return next(context);

@@ -1,4 +1,4 @@
-﻿namespace Byndyusoft.Net.Kafka.Extensions
+﻿namespace Byndyusoft.Net.Kafka.Configuration
 {
     using System.Collections.Generic;
     using System.Linq;

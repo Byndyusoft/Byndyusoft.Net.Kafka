@@ -1,7 +1,7 @@
 namespace MusicalityLabs.Storage.Api
 {
     using System;
-    using Byndyusoft.Net.Kafka.Extensions;
+    using Byndyusoft.Net.Kafka.Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
