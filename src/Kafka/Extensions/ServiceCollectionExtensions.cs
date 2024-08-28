@@ -54,16 +54,14 @@
             IEnumerable<Type> producerTypes
         )
         {
-            var requiredBaseType = typeof(KafkaProducerBase<>);
-            var producerInterface = typeof(IKafkaProducer<>);
+            var producersMarkerInterfaceType = typeof(IKafkaProducer);
+            var producerInterfaceType = typeof(IKafkaProducer<>);
+            var producerBaseType = typeof(KafkaProducerBase<>);
             foreach (var producerType in producerTypes)
-            {
-                services.AddSingleton(producerType);
-                services.AddSingleton(
-                    producerInterface.MakeGenericType(producerType.GetMessageType(requiredBaseType)),
-                    producerType
-                );
-            }
+                services
+                    .AddSingleton(producerType)
+                    .AddSingleton(producersMarkerInterfaceType, producerType)
+                    .AddSingleton(producerInterfaceType.MakeGenericType(producerType.GetMessageType(producerBaseType)), producerType);
 
             return services;
         }

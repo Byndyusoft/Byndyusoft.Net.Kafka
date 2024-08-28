@@ -3,13 +3,20 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    ///  Produce messages to Kafka
+    /// Kafka producer contract
     /// </summary>
-    public interface IKafkaProducer<in TMessage>
+    public interface IKafkaProducer<in TMessage> : IKafkaProducer
     {
         /// <summary>
-        /// Push message to queue
+        /// Produces message to Kafka
         /// </summary>
         public Task ProduceAsync(TMessage message);
+    }
+
+    /// <summary>
+    /// Producers marker interface
+    /// </summary>
+    public interface IKafkaProducer
+    {
     }
 }
