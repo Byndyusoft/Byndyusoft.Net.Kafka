@@ -9,7 +9,7 @@
     internal static class KafkaMessageProducerTypeExtensions
     {
         public static string GetProducingProfileName(this Type producerType)
-            => producerType.GetCustomAttribute<KafkaMessageProducerAttribute>(false)!.ProducingProfileName ?? producerType.FullName.ToSnakeCase();
+            => (producerType.GetCustomAttribute<KafkaMessageProducerAttribute>(false)!.ProducingProfileName ?? producerType.FullName).ToSnakeCase();
 
         public static string BuildClientId(this Type producerType, string solutionName)
         {
