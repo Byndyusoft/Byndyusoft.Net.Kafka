@@ -2,12 +2,14 @@
 {
     using System;
     using System.Linq;
+    using System.Reflection;
     using Abstractions.Producing;
     using CaseExtensions;
 
     internal static class KafkaMessageProducerTypeExtensions
     {
-        public static string GetProducingProfileName(this Type producerType) => producerType.FullName.ToSnakeCase();
+        public static string GetProducingProfileName(this Type producerType)
+            => producerType.GetCustomAttribute<KafkaMessageProducerAttribute>(false)!.ProducingProfileName ?? producerType.FullName.ToSnakeCase();
 
         public static string BuildClientId(this Type producerType, string solutionName)
         {

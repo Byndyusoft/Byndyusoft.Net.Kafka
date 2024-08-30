@@ -7,6 +7,8 @@
     {
         public string Topic { get; }
 
+        public string? ProducingProfileName { get; set; }
+
         public KafkaMessageProducerAttribute(string topic)
         {
             Topic = topic ?? throw new ArgumentNullException(nameof(topic));
