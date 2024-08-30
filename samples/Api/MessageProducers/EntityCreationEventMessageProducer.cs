@@ -5,7 +5,7 @@
     using KafkaFlow.Producers;
     using Contracts;
 
-    [KafkaMessageProducer("project.entity.creation")]
+    [KafkaMessageProducer(topic: "project.entity.creation")]
     public class EntityCreationEventMessageProducer : KafkaMessageProducerBase<EntityCreation>
     {
         public EntityCreationEventMessageProducer(IProducerAccessor producers) : base(producers)
