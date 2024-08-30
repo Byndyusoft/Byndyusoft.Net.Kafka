@@ -2,13 +2,12 @@
 {
     using Byndyusoft.Net.Kafka.Abstractions.Producing;
     using Byndyusoft.Net.Kafka.Producing;
-    using KafkaFlow.Producers;
     using Contracts;
 
     [KafkaMessageProducer(topic: "project.entity.creation")]
     public class EntityCreationEventMessageProducer : KafkaMessageProducerBase<EntityCreation>
     {
-        public EntityCreationEventMessageProducer(IProducerAccessor producers) : base(producers)
+        public EntityCreationEventMessageProducer(IKafkaMessageSender messageSender) : base(messageSender)
         {
         }
 

@@ -10,13 +10,13 @@
     /// </summary>
     public abstract class KafkaMessageProducerBase<TMessage> : IKafkaMessageProducer<TMessage>
     {
-        private readonly string _title;
-        private readonly IProducerAccessor _producers;
+        private readonly string _producingProfileName;
+        private readonly IKafkaMessageSender _messageSender;
 
-        protected KafkaMessageProducerBase(IProducerAccessor producers)
+        protected KafkaMessageProducerBase(IKafkaMessageSender messageSender)
         {
-            _title = GetType().GetTitle();
-            _producers = producers ?? throw new ArgumentNullException(nameof(producers));
+            _producingProfileName = GetType().GetProducingProfileName();
+            _messageSender = messageSender ?? throw new ArgumentNullException(nameof(messageSender));
         }
 
         /// <summary>
@@ -27,6 +27,6 @@
         protected abstract string KeyGenerator(TMessage message);
 
         /// <inheritdoc />
-        public Task ProduceAsync(TMessage message) => _producers[_title].ProduceAsync(KeyGenerator(message), message);
+        public Task ProduceAsync(TMessage message) => _messageSender.SendAsync(_producingProfileName, KeyGenerator(message), message);
     }
 }

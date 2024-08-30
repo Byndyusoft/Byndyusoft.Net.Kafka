@@ -2,19 +2,19 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Byndyusoft.Net.Kafka.Abstractions.Producing;
     using Microsoft.AspNetCore.Mvc;
     using Contracts;
-    using MessageProducers;
 
     [ApiController]
     [Route("[controller]")]
     public class EntitiesController : ControllerBase
     {
-        private readonly EntityCreationEventMessageProducer _exampleProducer;
+        private readonly IKafkaMessageProducer<EntityCreation> _exampleProducer;
 
-        public EntitiesController(EntityCreationEventMessageProducer exampleProducer)
+        public EntitiesController(IKafkaMessageProducer<EntityCreation> exampleProducer)
         {
-            _exampleProducer = exampleProducer;
+            _exampleProducer = exampleProducer ?? throw new ArgumentNullException(nameof(exampleProducer));
         }
 
         [HttpPost]

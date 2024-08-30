@@ -50,25 +50,25 @@
 
         private static IServiceCollection AddMessageProducers(this IServiceCollection services, IEnumerable<Type> producerTypes)
         {
-            var producersMarkerInterfaceType = typeof(IKafkaMessageProducer);
-            var producerInterfaceType = typeof(IKafkaMessageProducer<>);
-            var producerBaseType = typeof(KafkaMessageProducerBase<>);
+            var markerInterfaceType = typeof(IKafkaMessageProducer);
+            var interfaceType = typeof(IKafkaMessageProducer<>);
+            var baseType = typeof(KafkaMessageProducerBase<>);
             foreach (var producerType in producerTypes)
                 services
                     .AddSingleton(producerType)
-                    .AddSingleton(producersMarkerInterfaceType, producerType)
-                    .AddSingleton(producerInterfaceType.MakeGenericType(producerType.GetMessageType(producerBaseType)), producerType);
+                    .AddSingleton(markerInterfaceType, producerType)
+                    .AddSingleton(interfaceType.MakeGenericType(producerType.GetMessageType(baseType)), producerType);
 
             return services;
         }
 
-        private static IServiceCollection AddMessageHandlers(this IServiceCollection services, IEnumerable<Type> messageHandlerTypes)
+        private static IServiceCollection AddMessageHandlers(this IServiceCollection services, IEnumerable<Type> handlerTypes)
         {
-            var messageHandlersMarkerInterfaceType = typeof(IKafkaMessageHandler);
-            foreach (var messageHandlerType in messageHandlerTypes)
+            var markerInterfaceType = typeof(IKafkaMessageHandler);
+            foreach (var handlerType in handlerTypes)
                 services
-                    .AddSingleton(messageHandlerType)
-                    .AddSingleton(messageHandlersMarkerInterfaceType, messageHandlerType);
+                    .AddSingleton(handlerType)
+                    .AddSingleton(markerInterfaceType, handlerType);
 
             return services;
         }
@@ -85,6 +85,7 @@
             var producerTypes = GetMessageProducerTypes(assemblies);
             var messageHandlerTypes = GetMessageHandlerTypes(assemblies);
             return services
+                .AddSingleton<IKafkaMessageSender, KafkaMessageSender>()
                 .AddMessageProducers(producerTypes)
                 .AddMessageHandlers(messageHandlerTypes)
                 .AddKafka(

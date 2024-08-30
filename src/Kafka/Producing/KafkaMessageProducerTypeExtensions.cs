@@ -7,7 +7,7 @@
 
     internal static class KafkaMessageProducerTypeExtensions
     {
-        public static string GetTitle(this Type producerType) => producerType.FullName.ToSnakeCase();
+        public static string GetProducingProfileName(this Type producerType) => producerType.FullName.ToSnakeCase();
 
         public static string BuildClientId(this Type producerType, string solutionName)
         {

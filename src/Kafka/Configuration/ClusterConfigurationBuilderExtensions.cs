@@ -34,22 +34,23 @@
         public static IClusterConfigurationBuilder AddProducers(
             this IClusterConfigurationBuilder clusterConfigurationBuilder,
             string solutionName,
-            IEnumerable<Type> producerTypes
+            IEnumerable<Type> messageProducerTypes
         )
         {
-            foreach (var producerType in producerTypes)
-                clusterConfigurationBuilder.AddProducer(
-                    producerType.GetTitle(),
-                    producerConfigurationBuilder => producerConfigurationBuilder
-                        .DefaultTopic(KafkaMessageProducerTypeExtensions.GetTopic(producerType))
-                        .WithProducerConfig(CreateProducerConfig(solutionName, producerType))
-                        .AddMiddlewares(
-                            pipeline => pipeline
-                                .Add<ErrorsLoggingMiddleware>()
-                                .AddSerializer(_ => new NewtonsoftJsonSerializer(JsonSerializerSettingsExtensions.DefaultSettings))
-                                .Add<ProducedMessageLoggingMiddleware>()
-                        )
-                );
+            foreach (var messageProducerType in messageProducerTypes)
+                clusterConfigurationBuilder
+                    .AddProducer(
+                        messageProducerType.GetProducingProfileName(),
+                        producerConfigurationBuilder => producerConfigurationBuilder
+                            .DefaultTopic(KafkaMessageProducerTypeExtensions.GetTopic(messageProducerType))
+                            .WithProducerConfig(CreateProducerConfig(solutionName, messageProducerType))
+                            .AddMiddlewares(
+                                pipeline => pipeline
+                                    .Add<ErrorsLoggingMiddleware>()
+                                    .AddSerializer(_ => new NewtonsoftJsonSerializer(JsonSerializerSettingsExtensions.DefaultSettings))
+                                    .Add<ProducedMessageLoggingMiddleware>()
+                            )
+                    );
 
             return clusterConfigurationBuilder;
         }
@@ -61,27 +62,28 @@
         )
         {
             foreach (var messageHandlerType in messageHandlerTypes)
-                clusterConfigurationBuilder.AddConsumer(
-                    consumerConfigurationBuilder => consumerConfigurationBuilder
-                        .Topic(KafkaMessageHandlerTypeExtensions.GetTopic(messageHandlerType))
-                        .WithGroupId(messageHandlerType.BuildConsumersGroupId(solutionName))
-                        .WithBufferSize(100)
-                        .WithWorkersCount(10)
-                        .WithAutoOffsetReset(AutoOffsetReset.Earliest)
-                        .WithConsumerConfig(new ConsumerConfig {MaxPartitionFetchBytes = MessageMaxSizeBytes})
-                        .AddMiddlewares(
-                            pipeline => pipeline
-                                .Add<ErrorsLoggingMiddleware>()
-                                .Add<ConsumedMessageLoggingMiddleware>()
-                                .AddDeserializer(_ => new NewtonsoftJsonDeserializer(JsonSerializerSettingsExtensions.DefaultSettings))
-                                .AddTypedHandlers(h => h.AddHandlers(new[] {messageHandlerType}))
-                                .RetrySimple(
-                                    config => config
-                                        .TryTimes(3)
-                                        .WithTimeBetweenTriesPlan(retryNumber => TimeSpan.FromSeconds(Math.Pow(2, retryNumber)))
-                                )
-                        )
-                );
+                clusterConfigurationBuilder
+                    .AddConsumer(
+                        consumerConfigurationBuilder => consumerConfigurationBuilder
+                            .Topic(KafkaMessageHandlerTypeExtensions.GetTopic(messageHandlerType))
+                            .WithGroupId(messageHandlerType.BuildConsumersGroupId(solutionName))
+                            .WithBufferSize(100)
+                            .WithWorkersCount(10)
+                            .WithAutoOffsetReset(AutoOffsetReset.Earliest)
+                            .WithConsumerConfig(new ConsumerConfig {MaxPartitionFetchBytes = MessageMaxSizeBytes})
+                            .AddMiddlewares(
+                                pipeline => pipeline
+                                    .Add<ErrorsLoggingMiddleware>()
+                                    .Add<ConsumedMessageLoggingMiddleware>()
+                                    .AddDeserializer(_ => new NewtonsoftJsonDeserializer(JsonSerializerSettingsExtensions.DefaultSettings))
+                                    .AddTypedHandlers(h => h.AddHandlers(new[] {messageHandlerType}))
+                                    .RetrySimple(
+                                        config => config
+                                            .TryTimes(3)
+                                            .WithTimeBetweenTriesPlan(retryNumber => TimeSpan.FromSeconds(Math.Pow(2, retryNumber)))
+                                    )
+                            )
+                    );
 
             return clusterConfigurationBuilder;
         }
