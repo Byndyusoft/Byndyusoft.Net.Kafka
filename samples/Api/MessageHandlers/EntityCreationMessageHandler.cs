@@ -1,13 +1,13 @@
-﻿namespace MusicalityLabs.Storage.Api.MessageHandlers
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.MessageHandlers
 {
     using System;
     using System.Threading.Tasks;
     using Byndyusoft.Net.Kafka.Abstractions.Consuming;
+    using Byndyusoft.Net.Kafka.Consuming;
     using Microsoft.Extensions.Logging;
     using Contracts;
-    using Byndyusoft.Net.Kafka.Consuming;
 
-    [KafkaMessageHandler(topic: "project.entity.creation")]
+    [KafkaMessageHandler(topic: "composer_assistant.entity.creation")]
     public sealed class EntityCreationMessageHandler : KafkaMessageHandlerBase<EntityCreation>
     {
         private readonly ILogger<EntityCreationMessageHandler> _logger;

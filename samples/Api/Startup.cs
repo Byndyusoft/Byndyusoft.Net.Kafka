@@ -1,4 +1,4 @@
-namespace MusicalityLabs.Storage.Api
+namespace MusicalityLabs.ComposerAssistant.Storage.Api
 {
     using System;
     using Byndyusoft.Net.Kafka;

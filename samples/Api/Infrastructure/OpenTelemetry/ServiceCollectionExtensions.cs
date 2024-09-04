@@ -1,4 +1,4 @@
-﻿namespace MusicalityLabs.Storage.Api.Infrastructure.OpenTelemetry
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Infrastructure.OpenTelemetry
 {
     using global::OpenTelemetry.Metrics;
     using global::OpenTelemetry.Resources;

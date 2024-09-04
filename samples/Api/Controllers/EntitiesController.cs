@@ -1,4 +1,4 @@
-﻿namespace MusicalityLabs.Storage.Api.Controllers
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Controllers
 {
     using System;
     using System.Threading.Tasks;

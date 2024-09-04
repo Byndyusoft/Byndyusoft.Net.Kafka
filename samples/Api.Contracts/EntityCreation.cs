@@ -1,4 +1,4 @@
-﻿namespace MusicalityLabs.Storage.Api.Contracts
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Contracts
 {
     using System;
 

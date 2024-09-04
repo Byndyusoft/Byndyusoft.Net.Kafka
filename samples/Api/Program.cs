@@ -1,4 +1,4 @@
-namespace MusicalityLabs.Storage.Api
+namespace MusicalityLabs.ComposerAssistant.Storage.Api
 {
     using Byndyusoft.Logging.Builders;
     using Byndyusoft.Logging.Configuration;

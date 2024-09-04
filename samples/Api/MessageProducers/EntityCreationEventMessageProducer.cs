@@ -1,10 +1,10 @@
-﻿namespace MusicalityLabs.Storage.Api.MessageProducers
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.MessageProducers
 {
     using Byndyusoft.Net.Kafka.Abstractions.Producing;
     using Byndyusoft.Net.Kafka.Producing;
     using Contracts;
 
-    [KafkaMessageProducer(topic: "project.entity.creation")]
+    [KafkaMessageProducer(topic: "composer_assistant.entity.creation")]
     public class EntityCreationEventMessageProducer : KafkaMessageProducerBase<EntityCreation>
     {
         public EntityCreationEventMessageProducer(IKafkaMessageSender messageSender) : base(messageSender)
