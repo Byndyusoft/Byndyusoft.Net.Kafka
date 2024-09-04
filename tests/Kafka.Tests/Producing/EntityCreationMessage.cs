@@ -1,4 +1,4 @@
-﻿namespace Byndyusoft.Net.Kafka.Tests.Consuming
+﻿namespace Byndyusoft.Net.Kafka.Tests.Producing
 {
     public class EntityCreationMessage
     {
