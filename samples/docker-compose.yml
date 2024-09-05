@@ -1,6 +1,4 @@
-﻿version: '3.7'
-
-services:
+﻿services:
   jaeger:
     image: jaegertracing/all-in-one:1.20.0
     container_name: jaeger
@@ -32,12 +30,16 @@ services:
         - 9092:9092
       environment:
         KAFKA_BROKER_ID: 1
-        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://127.0.0.1:9092
-        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-        KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-        
+        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+        KAFKA_LISTENERS: INTERNAL://:29092,EXTERNAL://:9092
+        KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+        KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+        KAFKA_LISTENER_NAME_EXTERNAL_SASL_ENABLED_MECHANISMS: SCRAM-SHA-512
+        KAFKA_LISTENER_NAME_EXTERNAL_SCRAM-SHA-512_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.scram.ScramLoginModule required \
+                username=\"broker\" \
+                password=\"broker\";"
   kafka-ui:
       image: provectuslabs/kafka-ui
       container_name: kafka-ui
@@ -45,9 +47,10 @@ services:
         - 8090:8080
       restart: always
       environment:
-        - KAFKA_CLUSTERS_0_NAME=local
-        - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092,kafka2:29093
-        - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+        KAFKA_CLUSTERS_0_NAME: local
+        KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+        KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper: 2181
+
       links:
         - kafka
         - zookeeper
