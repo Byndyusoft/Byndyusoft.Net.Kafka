@@ -1,14 +1,15 @@
 ﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Controllers
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
     using Byndyusoft.Net.Kafka.Abstractions.Producing;
     using Microsoft.AspNetCore.Mvc;
     using Contracts;
 
     [ApiController]
-    [Route("[controller]")]
-    public class EntitiesController : ControllerBase
+    [Route("api/[controller]")]
+    public class EntitiesController : ControllerBase, IEntitiesApi
     {
         private readonly IKafkaMessageProducer<EntityCreation> _exampleProducer;
 
@@ -17,8 +18,9 @@
             _exampleProducer = exampleProducer ?? throw new ArgumentNullException(nameof(exampleProducer));
         }
 
+        /// <inheritdoc />
         [HttpPost]
-        public async Task CreateEntity([FromBody] string text)
+        public async Task CreateEntity([FromBody] string text, CancellationToken cancellationToken)
         {
             var exampleMessageDto = new EntityCreation
             {

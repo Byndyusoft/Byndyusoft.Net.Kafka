@@ -19,7 +19,7 @@
 
         protected override Task Handle(EntityCreation someEvent)
         {
-            _logger.LogInformation("Message: {2}", someEvent.Text);
+            _logger.LogInformation("Message: {EntityText}", someEvent.Text);
             return Task.FromResult(someEvent);
         }
     }
