@@ -27,10 +27,15 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
           
-      - name: Setup environment
+      - name: Start environment services
         run: |
           cd samples
           bash start.sh -xe
 
       - name: Test
         run: dotnet test --no-build
+
+      - name: Stop environment services
+        run: |
+          cd samples
+          bash stop.sh -xe
