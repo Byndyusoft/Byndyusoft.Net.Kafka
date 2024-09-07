@@ -27,5 +27,10 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
           
+      - name: Setup environment
+        run: |
+          cd samples
+          bash start.sh -xe
+
       - name: Test
         run: dotnet test --no-build
