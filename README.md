@@ -8,13 +8,7 @@
 1. Создаем topic с которыми будет работать приложение, используя конвенцию именования:
 "{проект}.{сущность}.{событие с ней произошедшее}"
 
-Примеры:
-project.notification.status_change
-project.notification.awaiting_official_sending
-project.notification.official_sent
-
-project.portfolio.input_data
-project.portfolio.precalculation_result
+**Пример**: composer_assistant.entity.creation
 
 Если прямо сейчас у вас нет времени погружаться в настройки topics:
 
@@ -39,25 +33,20 @@ dotnet add package Byndyusoft.Net.Kafka
     "Hosts": [
       "some-host:9092"
     ],
-    "Prefix" : "some-prefix",
     "SecurityInformation" : {
 	    "Username" : "username",
-	    "Password" : "password",
-	    "SaslMechanism" : "ScramSha512",
-	    "SecurityProtocol" : "SaslPlaintext"
+	    "Password" : "password"
 	}
 }
 ```
 
 3. Используем расширение AddKafkaBus, которое регистрирует все необходимые зависимости для работы библиотеки, в т.ч:
-- настройки Kafka из appsettings.json;
-- отправители сообщений, которые являются потомками KafkaProducerBase;
-- потребители сообщений, которые реализуют IKafkaConsumer;
-- обработчики входящих сообщений, которые реализуют IMessageHandler
+- отправители сообщений, которые являются потомками `KafkaMessageProducerBase` и помечены атрибутом `KafkaMessageProducerAttribute`;
+- обработчики входящих сообщений, которые являются потомками `KafkaMessageHandlerBase` и помечены атрибутом `KafkaMessageProducerAttribute`
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
-	services.AddKafkaBus(Configuration);
+	services.AddKafkaBus(_configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>());
 }
 ```
 
@@ -86,22 +75,19 @@ public void Configure(
 | acks                | После скольких acknowledge лидеру кластера необходимо считать сообщение успешно записанным | all (значение из min.insync.replicas) | 
 
 Конвенция наименования: 
-"{KafkaSettings.Prefix}.{Producer}.{Producer.Topic}".ToSnakeCase()
+"{Project}.{Service}.{Topic}".ToSnakeCase()
 
-Примеры:
-project.something_happened_events_producer.project.entity.some_event
+**Пример**: composer_assistant.storage_api.entity_creation
 
 ```c#
-public class EntityCreationEventsProducer : KafkaProducerBase<EntityCreation>
+[KafkaMessageProducer(topic: "composer_assistant.entity.creation")]
+public class EntityCreationEventMessageProducer : KafkaMessageProducerBase<EntityCreation>
 {
-    public EntityCreationEventsProducer(IProducerAccessor producers) 
-        : base(producers, nameof(EntityCreationEventsProducer))
+    public EntityCreationEventMessageProducer(IKafkaMessageSender messageSender) : base(messageSender)
     {
     }
 
-    public override string Topic => "project.entity.creation";
-    
-    public override string KeyGenerator(EntityCreation entityCreation)
+    protected override string KeyGenerator(EntityCreation entityCreation)
         => entityCreation.Id.ToString();
 }
 ```
@@ -112,35 +98,24 @@ public class EntityCreationEventsProducer : KafkaProducerBase<EntityCreation>
 2. Если сообщение не удалось обработать, consumer будет повторять попытку до 3 раз с задержкой равной retryCount^2
 
 Конвенция наименования: 
-"{KafkaSettings.Prefix}.{Consumer}.{Consumer.Topic}".ToSnakeCase()
+"{Project}.{Service}.{Topic}".ToSnakeCase()
 
-Примеры:
-project.something_happened_events_producer.project.entity.some_event
+**Пример**: composer_assistant.storage_api.entity_creation
 
 ```c#
-public class EntityCreationEventsConsumer : IKafkaConsumer
+[KafkaMessageHandler(topic: "composer_assistant.entity.creation")]
+public class EntityCreationMessageHandler : KafkaMessageHandlerBase<EntityCreation>
 {
-    public EntityCreationEventsConsumer(EntityCreationMessageHandler messageHandler)
+    private readonly ILogger<EntityCreationMessageHandler> _logger;
+
+    public EntityCreationMessageHandler(ILogger<EntityCreationMessageHandler> logger)
     {
-        MessageHandler = messageHandler;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public string Topic => "project.entity.creation";
-
-    public IMessageHandler MessageHandler { get; }
-}
-
-public class EntityCreationMessageHandler : IMessageHandler<EntityCreation>
-{
-    public Task Handle(IMessageContext context, EntityCreation someEvent)
+    protected override Task Handle(EntityCreation someEvent)
     {
-        Console.WriteLine(
-            "Partition: {0} | Offset: {1} | Message: {2}",
-            context.ConsumerContext.Partition,
-            context.ConsumerContext.Offset,
-            someEvent.Text
-        );
-
+        _logger.LogInformation("Message: {EntityText}", someEvent.Text);
         return Task.FromResult(someEvent);
     }
 }
