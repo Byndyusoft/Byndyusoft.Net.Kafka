@@ -62,6 +62,16 @@ public void Configure(
 }
 ```
 
+5. Добавляем телеметрию kafka
+```c#
+.AddOpenTelemetryTracing(
+    builder => builder
+        .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName))
+        .AddKafkaInstrumentation()
+        .AddAspNetCoreInstrumentation()
+)
+```
+
 ## Producer
 
 1. Ожидает подтверждения от всех синхронизированных реплик, прежде, чем считать сообщение успешно отправленным. 
