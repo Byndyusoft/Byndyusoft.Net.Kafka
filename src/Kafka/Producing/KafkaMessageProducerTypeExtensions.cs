@@ -5,6 +5,7 @@
     using System.Reflection;
     using Abstractions.Producing;
     using CaseExtensions;
+    using Infrastructure;
 
     internal static class KafkaMessageProducerTypeExtensions
     {
@@ -13,13 +14,10 @@
 
         public static string BuildClientId(this Type producerType, string solutionName)
         {
-            var solutionNameParts = solutionName.Split('.').ToArray();
-            var project = solutionNameParts[1].ToSnakeCase();
-            var service = string.Join("_", solutionNameParts.Skip(2).Select(x => x.ToSnakeCase()));
-
+            var (projectName, serviceName) = solutionName.ExtractProjectAndServiceNames();
             var topic = string.Join("_", producerType.GetTopic().Split('.').Skip(1).Select(x => x.ToSnakeCase()));
 
-            return $"{project}.{service}.{topic}".ToLower();
+            return $"{projectName}.{serviceName}.{topic}".ToLower();
         }
     }
 }
