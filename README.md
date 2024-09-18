@@ -33,10 +33,8 @@ dotnet add package Byndyusoft.Net.Kafka
     "Hosts": [
       "some-host:9092"
     ],
-    "SecurityInformation" : {
-	    "Username" : "username",
-	    "Password" : "password"
-	}
+    "Username" : "username",
+    "Password" : "password"
 }
 ```
 
@@ -49,6 +47,8 @@ public void ConfigureServices(IServiceCollection services)
 	services.AddKafkaBus(_configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>());
 }
 ```
+Поиск отправителей и обработчиков выполняется автоматически из всех используемых сборок, имя которых имеет общий префикс с вызывающей, префиксом считается последовательность символов имени сборки до первой точки.
+**Пример**: вызывающая сборка называется MusicalityLabs.ComposerAssistant.Storage.Api, поэтому поиск будет выполняться во всех сборках, название которых начинается с MusicalityLabs.
 
 4. Говорим запустить kafka до момента остановки работы приложения
 ```c#
@@ -58,7 +58,7 @@ public void Configure(
     IHostApplicationLifetime lifetime
 )
 {
-	app.UseKafkaBus(lifetime);
+	app.StartKafkaProcessing(lifetime);
 }
 ```
 
