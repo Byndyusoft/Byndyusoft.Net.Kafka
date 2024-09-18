@@ -85,9 +85,9 @@ public void Configure(
 | acks                | После скольких acknowledge лидеру кластера необходимо считать сообщение успешно записанным | all (значение из min.insync.replicas) | 
 
 Конвенция наименования: 
-"{проект}.{сервис}.{топик}".ToSnakeCase()
+"{проект}.{сервис}.{топик}".ToSnakeCase(), где "проект" опрееляется как второй сегмент имени сборки, "сервис", как все то, что идет после него.
 
-**Пример**: composer_assistant.storage_api.entity_creation
+**Пример**: для сборки MusicalityLabs.ComposerAssistant.Storage.Api и топика composer_assistant.entity.creation "проект" будет равен composer_assistant, "сервис" будет равен storage_api, итоговое имя будет равно composer_assistant.storage_api.entity_creation.
 
 ```c#
 [KafkaMessageProducer(topic: "composer_assistant.entity.creation")]
@@ -108,9 +108,9 @@ public class EntityCreationEventMessageProducer : KafkaMessageProducerBase<Entit
 2. Если сообщение не удалось обработать, consumer будет повторять попытку до 3 раз с задержкой равной 2^retryNumber
 
 Конвенция наименования: 
-"{проект}.{сервис}.{топик}".ToSnakeCase()
+"{проект}.{сервис}.{топик}".ToSnakeCase(), где "проект" опрееляется как второй сегмент имени сборки, "сервис", как все то, что идет после него.
 
-**Пример**: composer_assistant.storage_api.entity_creation
+**Пример**: для сборки MusicalityLabs.ComposerAssistant.Storage.Api и топика composer_assistant.entity.creation "проект" будет равен composer_assistant, "сервис" будет равен storage_api, итоговое имя будет равно composer_assistant.storage_api.entity_creation.
 
 ```c#
 [KafkaMessageHandler(topic: "composer_assistant.entity.creation")]
