@@ -30,11 +30,8 @@
                     .ToArray();
 
                 foreach (var reference in referencedAssemblies)
-                    if (assemblyNames.Contains(reference.FullName) == false)
-                    {
+                    if (assemblyNames.Add(reference.FullName))
                         assembliesStack.Push(Assembly.Load(reference));
-                        assemblyNames.Add(reference.FullName);
-                    }
             } while (assembliesStack.Count > 0);
         }
     }
