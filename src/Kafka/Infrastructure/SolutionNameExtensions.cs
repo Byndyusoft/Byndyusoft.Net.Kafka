@@ -5,7 +5,7 @@
 
     internal static class SolutionNameExtensions
     {
-        internal static (string projectName, string serviceName) ExtractProjectAndServiceNames(this string solutionName)
+        public static (string projectName, string serviceName) ExtractProjectAndServiceNames(this string solutionName)
         {
             var solutionNameParts = solutionName.Split('.').ToArray();
             var projectName = solutionNameParts[1].ToSnakeCase();
