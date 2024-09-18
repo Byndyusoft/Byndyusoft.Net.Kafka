@@ -41,7 +41,7 @@ namespace MusicalityLabs.ComposerAssistant.Storage.Api
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 
-            app.UseKafkaBus(lifetime);
+            app.StartKafkaProcessing(lifetime);
         }
     }
 }
