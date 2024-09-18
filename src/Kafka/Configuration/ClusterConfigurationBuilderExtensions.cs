@@ -47,8 +47,8 @@
                             .AddMiddlewares(
                                 pipeline => pipeline
                                     .Add<ErrorsLoggingMiddleware>()
-                                    .AddSerializer(_ => new NewtonsoftJsonSerializer(JsonSerializerSettingsExtensions.DefaultSettings))
                                     .Add<ProducedMessageLoggingMiddleware>()
+                                    .AddSerializer(_ => new NewtonsoftJsonSerializer(JsonSerializerSettingsExtensions.DefaultSettings))
                             )
                     );
 
@@ -74,8 +74,8 @@
                             .AddMiddlewares(
                                 pipeline => pipeline
                                     .Add<ErrorsLoggingMiddleware>()
-                                    .Add<ConsumedMessageLoggingMiddleware>()
                                     .AddDeserializer(_ => new NewtonsoftJsonDeserializer(JsonSerializerSettingsExtensions.DefaultSettings))
+                                    .Add<ConsumedMessageLoggingMiddleware>()
                                     .AddTypedHandlers(h => h.AddHandlers(new[] {messageHandlerType}))
                                     .RetrySimple(
                                         config => config

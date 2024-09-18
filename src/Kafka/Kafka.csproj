@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
+		<PackageReference Include="Byndyusoft.MaskedSerialization.Newtonsoft" Version="2.1.0" />
 		<PackageReference Include="CaseExtensions" Version="1.1.0" />
 		<PackageReference Include="KafkaFlow" Version="3.0.8" />
 		<PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="3.0.8" />

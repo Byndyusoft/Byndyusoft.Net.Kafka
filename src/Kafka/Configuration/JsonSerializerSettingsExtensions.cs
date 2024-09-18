@@ -2,6 +2,7 @@
 {
     using System;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
 
     internal static class JsonSerializerSettingsExtensions
     {
@@ -10,6 +11,7 @@
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
 
+            settings.Converters.Add(new StringEnumConverter());
             settings.TypeNameHandling = TypeNameHandling.Auto;
             return settings;
         }
