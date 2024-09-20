@@ -51,7 +51,7 @@ public void ConfigureServices(IServiceCollection services)
 
 **Пример**: вызывающая сборка называется MusicalityLabs.ComposerAssistant.Storage.Api, поэтому поиск будет выполняться во всех сборках, название которых начинается с MusicalityLabs.
 
-4. Запускаем работу с kafka, после запска обработка сообщений будет осуществляться до момента остановки приложения
+4. Запускаем работу с kafka, после запуска обработка сообщений будет осуществляться до момента остановки приложения
 ```c#
 public void Configure(
     IApplicationBuilder app,
