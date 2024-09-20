@@ -27,8 +27,18 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
 
+      - name: Start environment services
+        run: |
+          cd samples
+          bash start.sh -xe
+
       - name: Test
         run: dotnet test --configuration Release --no-build
+
+      - name: Stop environment services
+        run: |
+          cd samples
+          bash stop.sh -xe
         
       - name: Create package(s)
         run: dotnet pack --configuration Release --no-build
