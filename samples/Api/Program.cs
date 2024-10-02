@@ -2,6 +2,7 @@ namespace MusicalityLabs.ComposerAssistant.Storage.Api
 {
     using Byndyusoft.Logging.Builders;
     using Byndyusoft.Logging.Configuration;
+    using Byndyusoft.Net.Kafka.Configuration;
     using Infrastructure.OpenTelemetry;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
@@ -11,7 +12,10 @@ namespace MusicalityLabs.ComposerAssistant.Storage.Api
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args)
+                .Build()
+                .StartKafkaProcessing()
+                .Run();
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args)

@@ -5,6 +5,7 @@
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
+    using Byndyusoft.Net.Kafka.Configuration;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.TestHost;
     using Microsoft.Extensions.Hosting;
@@ -18,7 +19,7 @@
 
     public class MessageHandlingTest
     {
-        private static Task<IHost> CreateHost(Mock<ILogger> mockLogger)
+        private static IHost CreateHost(Mock<ILogger> mockLogger)
             => new HostBuilder()
                 .UseMockLogger(mockLogger)
                 .ConfigureAppConfiguration(
@@ -37,7 +38,8 @@
                         .UseTestServer()
                         .UseStartup<Startup>()
                 )
-                .StartAsync();
+                .Build()
+                .StartKafkaProcessing();
 
         private static EntitiesApiClient CreateEntitiesApiClient(HttpClient httpClient)
             => new(
@@ -52,9 +54,11 @@
             const string entityCreatingText = "Api.Testing.Test";
 
             var mockLogger = MockLoggerExtensions.CreateMockLogger();
-            using var host = await CreateHost(mockLogger);
-            
+            using var host = CreateHost(mockLogger);
+
             // When
+            await host.StartAsync();
+
             var entitiesApiClient = CreateEntitiesApiClient(host.GetTestClient());
             await entitiesApiClient.CreateEntity(entityCreatingText, CancellationToken.None);
 
