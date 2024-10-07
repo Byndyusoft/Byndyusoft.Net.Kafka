@@ -28,7 +28,7 @@ namespace MusicalityLabs.ComposerAssistant.Storage.Api
             services.AddKafkaBus(_configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>());
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment webHostEnvironment, IHostApplicationLifetime lifetime)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment webHostEnvironment)
         {
             if (webHostEnvironment.IsDevelopment())
             {
@@ -40,8 +40,6 @@ namespace MusicalityLabs.ComposerAssistant.Storage.Api
             app.UseRouting();
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
-
-            app.StartKafkaProcessing(lifetime);
         }
     }
 }

@@ -6,7 +6,6 @@
 		<PackageReference Include="KafkaFlow" Version="3.0.8" />
 		<PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="3.0.8" />
 		<PackageReference Include="KafkaFlow.OpenTelemetry" Version="3.0.8" />
-		<PackageReference Include="KafkaFlow.Retry.API" Version="3.0.1" />
 		<PackageReference Include="KafkaFlow.Serializer.NewtonsoftJson" Version="3.0.8" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />

@@ -53,13 +53,12 @@ public void ConfigureServices(IServiceCollection services)
 
 4. Запускаем работу с kafka, после запуска обработка сообщений будет осуществляться до момента остановки приложения
 ```c#
-public void Configure(
-    IApplicationBuilder app,
-    IWebHostEnvironment env,
-    IHostApplicationLifetime lifetime
-)
+public static void Main(string[] args)
 {
-	app.StartKafkaProcessing(lifetime);
+    CreateHostBuilder(args)
+        .Build()
+        .StartKafkaProcessing()
+        .Run();
 }
 ```
 

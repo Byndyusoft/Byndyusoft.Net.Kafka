@@ -8,7 +8,6 @@
     using Confluent.Kafka;
     using KafkaFlow;
     using KafkaFlow.Configuration;
-    using KafkaFlow.Retry;
     using KafkaFlow.Serializer;
     using Acks = Confluent.Kafka.Acks;
     using AutoOffsetReset = KafkaFlow.AutoOffsetReset;
@@ -77,11 +76,6 @@
                                     .AddDeserializer(_ => new NewtonsoftJsonDeserializer(JsonSerializerSettingsExtensions.DefaultSettings))
                                     .Add<ConsumedMessageLoggingMiddleware>()
                                     .AddTypedHandlers(h => h.AddHandlers(new[] {messageHandlerType}))
-                                    .RetrySimple(
-                                        config => config
-                                            .TryTimes(3)
-                                            .WithTimeBetweenTriesPlan(retryNumber => TimeSpan.FromSeconds(Math.Pow(2, retryNumber)))
-                                    )
                             )
                     );
 
