@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
-		<PackageReference Include="Byndyusoft.MaskedSerialization.Newtonsoft" Version="2.1.0" />
+		<PackageReference Include="Byndyusoft.MaskedSerialization.Newtonsoft" Version="3.1.0" />
 		<PackageReference Include="CaseExtensions" Version="1.1.0" />
-		<PackageReference Include="KafkaFlow" Version="3.0.8" />
-		<PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="3.0.8" />
-		<PackageReference Include="KafkaFlow.OpenTelemetry" Version="3.0.8" />
-		<PackageReference Include="KafkaFlow.Serializer.NewtonsoftJson" Version="3.0.8" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+		<PackageReference Include="KafkaFlow" Version="4.0.1" />
+		<PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="4.0.1" />
+		<PackageReference Include="KafkaFlow.OpenTelemetry" Version="4.0.1" />
+		<PackageReference Include="KafkaFlow.Serializer.NewtonsoftJson" Version="4.0.1" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.32" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.32" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.32" />
 	</ItemGroup>
 
 	<ItemGroup>
