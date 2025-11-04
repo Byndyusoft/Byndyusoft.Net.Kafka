@@ -3,6 +3,7 @@ namespace MusicalityLabs.ComposerAssistant.Storage.Api
     using System;
     using Byndyusoft.Net.Kafka;
     using Byndyusoft.Net.Kafka.Configuration;
+    using Infrastructure.OpenTelemetry;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -20,9 +21,9 @@ namespace MusicalityLabs.ComposerAssistant.Storage.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-           services
+            services
                 .AddControllers()
-            .AddTracing();
+                .AddOpenTelemetryTracing();
             services.AddSwaggerGen();
 
             services.AddKafkaBus(_configuration.GetSection(nameof(KafkaSettings)).Get<KafkaSettings>());
