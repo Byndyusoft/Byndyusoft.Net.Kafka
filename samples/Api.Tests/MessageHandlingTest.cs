@@ -1,72 +1,39 @@
-﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Tests
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Tests;
+
+using System;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using Clients;
+using Infrastructure;
+using Infrastructure.Logging;
+using Microsoft.Extensions.Options;
+using Xunit;
+
+public class MessageHandlingTest
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Byndyusoft.Net.Kafka.Configuration;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.TestHost;
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Options;
-    using Clients;
-    using Infrastructure.Logging;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Logging;
-    using Xunit;
-    using Moq;
+    private static EntitiesApiClient CreateEntitiesApiClient(HttpClient httpClient)
+        => new(
+            httpClient,
+            Options.Create(new StorageApiSettings {ConnectionString = httpClient.BaseAddress!.ToString()})
+        );
 
-    public class MessageHandlingTest
+    [Fact]
+    public async Task ShouldHandleMessageFromKafka()
     {
-        private static IHost CreateHost(Mock<ILogger> mockLogger)
-            => new HostBuilder()
-                .UseMockLogger(mockLogger)
-                .ConfigureAppConfiguration(
-                    (_, configBuilder) => configBuilder
-                        .AddInMemoryCollection(
-                            new[]
-                            {
-                                new KeyValuePair<string, string>("KafkaSettings:Hosts:0", "127.0.0.1:9092"),
-                                new KeyValuePair<string, string>("KafkaSettings:Username", "broker"),
-                                new KeyValuePair<string, string>("KafkaSettings:Password", "broker")
-                            }
-                        )
-                )
-                .ConfigureWebHost(
-                    webBuilder => webBuilder
-                        .UseTestServer()
-                        .UseStartup<Startup>()
-                )
-                .Build()
-                .StartKafkaProcessing();
+        // Given
+        const string entityCreatingText = "Api.Testing.Test";
+        var mockLogger = MockLoggerExtensions.CreateMockLogger();
+        var applicationFactory = new ComposerAssistantStorageApplicationFactory(mockLogger);
 
-        private static EntitiesApiClient CreateEntitiesApiClient(HttpClient httpClient)
-            => new(
-                httpClient,
-                Options.Create(new StorageApiSettings {ConnectionString = httpClient.BaseAddress!.ToString()})
-            );
+        // When
+        var entitiesApiClient = CreateEntitiesApiClient(applicationFactory.CreateClient());
+        await entitiesApiClient.CreateEntity(entityCreatingText, CancellationToken.None);
 
-        [Fact]
-        public async Task ShouldHandleMessageFromKafka()
-        {
-            // Given
-            const string entityCreatingText = "Api.Testing.Test";
-
-            var mockLogger = MockLoggerExtensions.CreateMockLogger();
-            using var host = CreateHost(mockLogger);
-
-            // When
-            await host.StartAsync();
-
-            var entitiesApiClient = CreateEntitiesApiClient(host.GetTestClient());
-            await entitiesApiClient.CreateEntity(entityCreatingText, CancellationToken.None);
-
-            // Then
-            await Task.Delay(TimeSpan.FromSeconds(30));
-            mockLogger
-                .VerifyNoErrorsWasLogged()
-                .VerifyInformationMessageWasLogged($"Message: {entityCreatingText}");
-        }
+        // Then
+        await Task.Delay(TimeSpan.FromSeconds(30));
+        mockLogger
+            .VerifyNoErrorsWasLogged()
+            .VerifyInformationMessageWasLogged($"Message: {entityCreatingText}");
     }
 }
