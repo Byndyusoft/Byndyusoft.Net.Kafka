@@ -1,9 +1,8 @@
-﻿namespace Byndyusoft.Net.Kafka.Tests.Consuming
-{
-    public class EntityCreationMessage
-    {
-        public int Id { get; set; }
+﻿namespace Byndyusoft.Net.Kafka.Tests.Consuming;
 
-        public string Name { get; set; }
-    }
+public class EntityCreationMessage
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; }
 }

@@ -1,11 +1,10 @@
-﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Contracts
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Contracts;
+
+using System;
+
+public class EntityCreation
 {
-    using System;
+    public Guid Id { get; set; }
 
-    public class EntityCreation
-    {
-        public Guid Id { get; set; }
-
-        public string Text { get; set; } = default!;
-    }
+    public string Text { get; set; } = default!;
 }
