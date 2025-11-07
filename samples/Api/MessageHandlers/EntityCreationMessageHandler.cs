@@ -1,26 +1,26 @@
-﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.MessageHandlers
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.MessageHandlers;
+
+using System;
+using System.Threading.Tasks;
+using Byndyusoft.Net.Kafka.Abstractions.Consuming;
+using Byndyusoft.Net.Kafka.Consuming;
+using Contracts;
+using Microsoft.Extensions.Logging;
+
+[KafkaMessageHandler("composer_assistant.entity.creation")]
+public sealed class EntityCreationMessageHandler : KafkaMessageHandlerBase<EntityCreation>
 {
-    using System;
-    using System.Threading.Tasks;
-    using Byndyusoft.Net.Kafka.Abstractions.Consuming;
-    using Byndyusoft.Net.Kafka.Consuming;
-    using Microsoft.Extensions.Logging;
-    using Contracts;
+    private readonly ILogger<EntityCreationMessageHandler> _logger;
 
-    [KafkaMessageHandler(topic: "composer_assistant.entity.creation")]
-    public sealed class EntityCreationMessageHandler : KafkaMessageHandlerBase<EntityCreation>
+    public EntityCreationMessageHandler(ILogger<EntityCreationMessageHandler> logger)
     {
-        private readonly ILogger<EntityCreationMessageHandler> _logger;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
-        public EntityCreationMessageHandler(ILogger<EntityCreationMessageHandler> logger)
-        {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
+    protected override Task Handle(EntityCreation someEvent)
+    {
+        _logger.LogInformation("Message: {EntityText}", someEvent.Text);
 
-        protected override Task Handle(EntityCreation someEvent)
-        {
-            _logger.LogInformation("Message: {EntityText}", someEvent.Text);
-            return Task.FromResult(someEvent);
-        }
+        return Task.FromResult(someEvent);
     }
 }

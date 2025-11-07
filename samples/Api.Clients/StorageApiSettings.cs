@@ -1,8 +1,7 @@
-﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Clients
-{
-    using Byndyusoft.ApiClient;
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Clients;
 
-    public class StorageApiSettings : ApiClientSettings
-    {
-    }
+using Byndyusoft.ApiClient;
+
+public class StorageApiSettings : ApiClientSettings
+{
 }

@@ -1,36 +1,46 @@
-﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Infrastructure.OpenTelemetry
-{
-    using Byndyusoft.Net.Kafka.Configuration;
-    using global::OpenTelemetry.Metrics;
-    using global::OpenTelemetry.Resources;
-    using global::OpenTelemetry.Trace;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Infrastructure.OpenTelemetry;
 
-    public static class ServiceCollectionExtensions
+using System;
+using Byndyusoft.Net.Kafka.Configuration;
+using global::OpenTelemetry.Exporter;
+using global::OpenTelemetry.Resources;
+using global::OpenTelemetry.Trace;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddOpenTelemetry(
+        this IServiceCollection services,
+        string serviceName,
+        IConfiguration configuration
+    )
     {
-        public static IServiceCollection AddOpenTelemetry(
-            this IServiceCollection services,
-            string serviceName,
-            IConfiguration configuration
-        ) => services
-            .AddOpenTelemetryTracing(
-                builder => builder
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName))
-                    .AddKafkaInstrumentation()
-                    .AddAspNetCoreInstrumentation()
-                    .AddJaegerExporter(
-                        o =>
+        services
+            .AddOpenTelemetry()
+            .ConfigureResource(
+                resource => resource.AddService(serviceName)
+            )
+            .WithTracing(
+                builder =>
+                    builder
+                        .AddKafkaInstrumentation()
+                        .AddAspNetCoreInstrumentation(
+                            o =>
                             {
-                                o.AgentHost = configuration.GetSection("Jaeger:JAEGER_AGENT_HOST").Value;
-                                o.AgentPort = int.Parse(configuration.GetSection("Jaeger:JAEGER_AGENT_PORT").Value);
+                                o.Filter = context => !context.Request.Path
+                                               .StartsWithSegments("/swagger");
                             }
                         )
-            )
-            .AddOpenTelemetryMetrics(
-                builder => builder
-                    .AddAspNetCoreInstrumentation()
-                    .AddPrometheusExporter()
+                        .AddOtlpExporter(
+                            o =>
+                            {
+                                o.Endpoint = new Uri(configuration.GetSection("Jaeger:JAEGER_ENDPOINT").Value!);
+                                o.Protocol = OtlpExportProtocol.HttpProtobuf;
+                            }
+                        )
             );
+
+        return services;
     }
 }

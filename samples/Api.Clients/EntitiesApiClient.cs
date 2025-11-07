@@ -1,21 +1,20 @@
-﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Clients
+﻿namespace MusicalityLabs.ComposerAssistant.Storage.Api.Clients;
+
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using Byndyusoft.ApiClient;
+using Contracts;
+using Microsoft.Extensions.Options;
+
+public class EntitiesApiClient : BaseClient, IEntitiesApi
 {
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Byndyusoft.ApiClient;
-    using Microsoft.Extensions.Options;
-    using Contracts;
+    private const string ApiPrefix = "api/entities";
 
-    public class EntitiesApiClient : BaseClient, IEntitiesApi
+    public EntitiesApiClient(HttpClient client, IOptions<StorageApiSettings> apiSettings) : base(client, apiSettings)
     {
-        private const string ApiPrefix = "api/entities";
-
-        public EntitiesApiClient(HttpClient client, IOptions<StorageApiSettings> apiSettings) : base(client, apiSettings)
-        {
-        }
-
-        public Task CreateEntity(string text, CancellationToken cancellationToken)
-            => PostAsync(ApiPrefix, text, cancellationToken);
     }
+
+    public Task CreateEntity(string text, CancellationToken cancellationToken)
+        => PostAsync(ApiPrefix, text, cancellationToken);
 }
